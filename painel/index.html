@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Executivo - EU⁺ Saber</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Kalam:wght@300;400&display=swap');
 
         :root {
             --fundo-principal: #060E18;
@@ -39,7 +39,7 @@
             align-items: center;
         }
 
-        select, textarea {
+        select {
             background-color: var(--fundo-terciario);
             border: 1px solid var(--bordas);
             color: var(--texto-principal);
@@ -57,6 +57,7 @@
             border-radius: 4px;
             text-transform: uppercase;
             font-size: 11px;
+            transition: all 0.2s;
         }
         button:hover { background-color: var(--dourado-principal); color: var(--fundo-principal); }
 
@@ -67,28 +68,130 @@
         }
 
         .sidebar { background-color: var(--fundo-secundario); border-right: 1px solid var(--bordas); padding: 20px; overflow-y: auto; }
-        .content-body { padding: 40px; overflow-y: auto; background-color: var(--fundo-principal); }
-        .notes-panel { background-color: var(--fundo-secundario); border-left: 1px solid var(--bordas); padding: 20px; display: flex; flex-direction: column; }
+        
+        /* Ajuste do Workspace de Leitura para destacar o Caderno */
+        .content-body { 
+            padding: 30px; 
+            overflow-y: auto; 
+            background-color: #EAEFF4; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
+        .notes-panel { 
+            background-color: var(--fundo-secundario); 
+            border-left: 1px solid var(--bordas); 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+        }
+
+        /* Itens da lista de aulas */
         .aula-item {
             padding: 12px; border-radius: 4px; cursor: pointer; margin-bottom: 8px; font-size: 14px;
             transition: all 0.2s; border: 1px solid transparent; color: var(--texto-secundario);
+            display: flex; justify-content: space-between; align-items: center;
         }
         .aula-item:hover, .aula-item.active { background-color: var(--fundo-terciario); border-color: var(--bordas); color: var(--dourado-principal); }
         
+        /* Item bloqueado pelo plano do usuário */
+        .aula-item.bloqueado {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: rgba(0,0,0,0.1) !important;
+        }
+        .aula-item.bloqueado:hover { color: var(--texto-secundario); border-color: transparent; }
+        .tag-trava { font-size: 10px; color: #E74C3C; border: 1px solid #E74C3C; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; }
+
+        /* =====================================================================
+           ESTILIZAÇÃO DO CADERNO PAUTADO
+        ===================================================================== */
+        .folha-caderno {
+            background-color: #FFFFFF;
+            width: 100%;
+            max-width: 800px;
+            min-height: 100% ;
+            padding: 50px 40px 40px 65px;
+            border-left: 2px solid #FF8585; /* Linha de margem vertical */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 2px;
+            position: relative;
+            background-image: linear-gradient(rgba(196, 209, 223, 0.35) 1px, transparent 1px);
+            background-size: 100% 28px;
+            line-height: 28px;
+        }
+
+        .conteudo-aula-dinamico {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            color: #1A2430;
+            text-align: justify;
+            white-space: pre-line;
+        }
+
+        /* Regra Regex/Seletora Visual de Tópicos (Azul Profundo Corporativo) */
+        .conteudo-aula-dinamico .topico-destaque {
+            color: #0A3663 !important;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 12px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        /* =====================================================================
+           ESTILIZAÇÃO DO POST-IT
+        ===================================================================== */
+        .post-it-nota {
+            background-color: #FEF5B1;
+            width: 100%;
+            max-width: 280px;
+            height: 280px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15);
+            transform: rotate(-1deg);
+            transition: transform 0.2s ease;
+            margin-top: 20px;
+        }
+        .post-it-nota:hover { transform: rotate(0deg) scale(1.02); }
+        
+        .post-it-alfinete {
+            width: 12px; height: 12px;
+            background-color: #E74C3C;
+            border-radius: 50%;
+            position: absolute;
+            top: -6px; left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .post-it-nota textarea {
+            width: 100%; height: 85%;
+            background: transparent; border: none; resize: none;
+            font-family: 'Kalam', cursive;
+            font-size: 16px; color: #2C3E50;
+            line-height: 24px;
+        }
+        .post-it-nota textarea:focus { outline: none; }
         .status-save { font-size: 11px; color: var(--texto-secundario); text-align: right; margin-top: 5px; }
+
         #loginOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background-color: var(--fundo-principal); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .card { background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 32px; border-radius: 4px; width: 400px; }
+        .login-input { width: 100%; padding: 12px; background: var(--fundo-terciario); border: 1px solid var(--bordas); color: #fff; margin-bottom: 16px; border-radius: 4px; font-family: 'DM Sans', sans-serif; }
     </style>
 </head>
 <body>
 
     <div id="loginOverlay">
         <div class="card" style="text-align: center;">
-            <h2 style="margin-bottom: 16px;">Ambiente Executivo EU⁺</h2>
-            <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 24px;">Insira seu ID de Ambiente para validação e ancoragem de dados.</p>
-            <input type="text" id="loginAmbiente" placeholder="Ex: EXEC0001" style="text-align: center; width: 100%; padding: 12px; background: var(--fundo-terciario); border: 1px solid var(--bordas); color: #fff; margin-bottom: 16px; border-radius: 4px;">
-            <button id="btnLogin" style="width: 100%; padding: 12px;">Acessar Plataforma</button>
+            <h2 style="margin-bottom: 16px;">Mesa Executiva Saber⁺</h2>
+            <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 24px;">Insira suas credenciais corporativas do ecossistema EU⁺.</p>
+            <input type="text" id="loginEmail" placeholder="E-mail do Aluno" class="login-input">
+            <input type="password" id="loginSenha" placeholder="Senha Provisória" class="login-input">
+            <button id="btnLogin" style="width: 100%; padding: 12px;">Autenticar Acesso</button>
         </div>
     </div>
 
@@ -97,7 +200,7 @@
         <div>
             <select id="selectCurso" style="width: 280px;"></select>
         </div>
-        <div id="nomeUsuario" style="font-size: 14px; color: var(--dourado-principal);">Ambiente: <span id="lblAmbiente"></span></div>
+        <div id="nomeUsuario" style="font-size: 14px; color: var(--dourado-principal);">Usuário: <span id="lblNomeAluno">---</span> <span id="lblAmbiente" style="opacity:0.5; font-size:11px;"></span></div>
     </header>
 
     <div class="painel-wrapper">
@@ -106,51 +209,63 @@
         </div>
         
         <div class="content-body">
-            <div id="aulaTitulo" style="margin-bottom: 20px; font-size: 32px;">Selecione uma aula ao lado para iniciar</div>
-            <div id="aulaConteudo" style="color: var(--texto-principal); line-height: 1.8; font-size: 16px; white-space: pre-line;">
-                Por favor, escolha o módulo no menu à esquerda para renderizar a injeção de contexto estruturada do seu manual de estudos.
+            <div class="folha-caderno">
+                <div id="aulaTitulo" style="margin-bottom: 20px; font-size: 28px; line-height: 34px;">Selecione uma aula ao lado para iniciar</div>
+                <div id="aulaConteudo" class="conteudo-aula-dinamico">
+                    Por favor, escolha o módulo liberado no menu à esquerda para renderizar a injeção de contexto estruturada do seu manual de estudos.
+                </div>
             </div>
         </div>
         
         <div class="notes-panel">
-            <h3 style="font-size: 18px; margin-bottom: 10px;">✍️ Minhas Anotações</h3>
-            <p style="color: var(--texto-secundario); font-size: 12px; margin-bottom: 15px;">Seus resumos executivos são sincronizados automaticamente com sua aba exclusiva da planilha.</p>
-            <textarea id="txtAnotacoes" style="flex: 1; resize: none; margin-bottom: 10px;" placeholder="Digite aqui seus insights..."></textarea>
-            <div class="status-save" id="statusSalvar">✨ Conectado à Planilha Master</div>
-            <button id="btnSalvarNota" style="margin-top: 10px; width: 100%;">Forçar Sincronização</button>
+            <h3 style="font-size: 18px; margin-bottom: 5px; text-align: center;">✍️ Caderno de Insights</h3>
+            <p style="color: var(--texto-secundario); font-size: 12px; text-align: center; margin-bottom: 15px;">Sincronização em nuvem ativa</p>
+            
+            <div class="post-it-nota">
+                <div class="post-it-alfinete"></div>
+                <textarea id="txtAnotacoes" placeholder="Digite aqui seus insights e reflexões executivas..."></textarea>
+                <div class="status-save" id="statusSalvar">✨ Conectado à Nuvem</div>
+            </div>
+            <button id="btnSalvarNota" style="margin-top: 25px; width: 100%; max-width: 280px;">Sincronizar Agora</button>
         </div>
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6nf5lgvSTCtX2n4kNKaQHqfJtv9QvtjJGgBMcmrtLpGybae7eLb5vlDm06bzrxgF2DA/exec";
         let currentAmbiente = "";
+        let restricoesPlano = null;
         let dbCursos = [];
         let currentCursoId = "";
         let currentAulaId = "";
         let saveTimeout;
 
+        // LOGIN DO ALUNO ATUALIZADO PARAMS MÚLTIPLOS
         document.getElementById('btnLogin').addEventListener('click', function() {
-            const id = document.getElementById('loginAmbiente').value.trim();
-            if(!id) return alert("Por favor, digite seu ID de Ambiente.");
+            const email = document.getElementById('loginEmail').value.trim();
+            const senha = document.getElementById('loginSenha').value.trim();
             
-            this.innerText = "Autenticando...";
-            fetch(`${SCRIPT_URL}?action=validarAcesso&idAmbiente=${id}`)
+            if(!email || !senha) return alert("Por favor, preencha todos os campos.");
+            
+            this.innerText = "Validando Credenciais...";
+            
+            fetch(`${SCRIPT_URL}?action=validarAcesso&email=${encodeURIComponent(email)}&senha=${encodeURIComponent(senha)}`)
             .then(res => res.json())
             .then(res => {
                 if(res.autorizado) {
-                    currentAmbiente = id;
-                    document.getElementById('lblAmbiente').innerText = id;
+                    currentAmbiente = res.idAmbiente;
+                    restricoesPlano = res.restricoes;
+                    
+                    document.getElementById('lblNomeAluno').innerText = res.nome;
+                    document.getElementById('lblAmbiente').innerText = `(${res.idAmbiente})`;
                     document.getElementById('loginOverlay').style.display = 'none';
                     carregarMenu();
                 } else {
-                    alert("ID inválido ou Plano Inativo no Painel Gestor.");
-                    this.innerText = "Acessar Plataforma";
+                    alert(res.error || "Acesso negado. Credenciais inválidas ou plano inativo.");
+                    this.innerText = "Autenticar Acesso";
                 }
             }).catch(() => {
-                alert("Conectando ao ambiente.");
-                currentAmbiente = id;
-                document.getElementById('loginOverlay').style.display = 'none';
-                carregarMenu();
+                alert("Erro ao conectar à central. Verifique sua conexão.");
+                this.innerText = "Autenticar Acesso";
             });
         });
 
@@ -169,6 +284,7 @@
             const select = document.getElementById('selectCurso');
             const uniqueCursos = [...new Set(dbCursos.map(c => c.idCurso))];
             select.innerHTML = "";
+            
             uniqueCursos.forEach(cId => {
                 const curso = dbCursos.find(c => c.idCurso === cId);
                 const opt = document.createElement('option');
@@ -183,42 +299,82 @@
             if(uniqueCursos.length > 0) renderizarAulas(uniqueCursos[0]);
         }
 
+        // LOGÍSTICA DE COMPORTAMENTO E TRAVA DE PLANOS NO FRONT-END
         function renderizarAulas(cursoId) {
             currentCursoId = cursoId;
             const container = document.getElementById('listaAulas');
             container.innerHTML = `<h4 style="color: var(--texto-secundario); margin-bottom: 15px; font-size: 12px; text-transform: uppercase;">Cronograma do Curso</h4>`;
             
             const aulasFiltradas = dbCursos.filter(c => c.idCurso === cursoId);
-            aulasFiltradas.forEach(aula => {
+            
+            aulasFiltradas.forEach((aula, index) => {
+                let bloqueada = false;
+                
+                // Regra 1: Validação do Plano Free (Bloqueia tudo que não for o Módulo/Capítulo 1)
+                if(restricoesPlano && restricoesPlano.limitarCapitulos) {
+                    if(aula.idAula !== "AULA01" && index > 0) {
+                        bloqueada = true;
+                    }
+                }
+                
+                // Regra 2: Validação do Período de Teste Freemium (Verifica se está bloqueado por tempo)
+                if(restricoesPlano && restricoesPlano.bloqueado) {
+                    bloqueada = true;
+                }
+                
+                // Regra 3: Validação do Plano Básico (Liberação sequencial por meses de contratação)
+                if(restricoesPlano && restricoesPlano.limitarPorMeses) {
+                    if(index >= restricoesPlano.limitarPorMeses) {
+                        bloqueada = true;
+                    }
+                }
+
                 const div = document.createElement('div');
-                div.className = "aula-item";
-                div.innerText = aula.tituloAula;
-                div.addEventListener('click', () => {
-                    document.querySelectorAll('.aula-item').forEach(el => el.classList.remove('active'));
-                    div.classList.add('active');
-                    exibirAula(aula);
-                });
+                div.className = "aula-item" + (bloqueada ? " bloqueado" : "");
+                
+                if(bloqueada) {
+                    div.innerHTML = `<span>${aula.tituloAula}</span> <span class="tag-trava">🔑 Upgrade</span>`;
+                } else {
+                    div.innerText = aula.tituloAula;
+                    div.addEventListener('click', () => {
+                        document.querySelectorAll('.aula-item').forEach(el => el.classList.remove('active'));
+                        div.classList.add('active');
+                        exibirAula(aula);
+                    });
+                }
                 container.appendChild(div);
             });
         }
 
+        // COORDENAÇÃO DE HIGHLIGHTS VISUAIS NOS TÓPICOS NUMÉRICOS
         function exibirAula(aula) {
             currentAulaId = aula.idAula;
             document.getElementById('aulaTitulo').innerText = aula.tituloAula;
-            document.getElementById('aulaConteudo').innerText = "Carregando conteúdo em tempo real direto do Google Docs...";
+            document.getElementById('aulaConteudo').innerHTML = "<em>Carregando conteúdo executivo direto do Google Docs corporativo...</em>";
             
             fetch(`${SCRIPT_URL}?action=carregarAula&idAmbiente=${currentAmbiente}&idCurso=${currentCursoId}&idAula=${currentAulaId}&idDoc=${aula.idDoc}`)
             .then(res => res.json())
             .then(res => {
                 if(res.success) {
-                    document.getElementById('aulaConteudo').innerText = res.conteudo;
+                    // Processa o texto quebrando linhas e identificando tópicos decimais (ex: 1.1, 2.3)
+                    let textoFormatado = res.conteudo.split('\n').map(linha => {
+                        let trimLinha = linha.trim();
+                        // Se a linha começar com números seguidos de ponto (ex: 1. ou 1.2.3), aplica classe azul
+                        if (/^\d+(\.\d+)*\.?/.test(trimLinha)) {
+                            return `<span class="topico-destaque">${linha}</span>`;
+                        }
+                        return linha;
+                    }).join('\n');
+
+                    document.getElementById('aulaConteudo').innerHTML = textoFormatado;
                     document.getElementById('txtAnotacoes').value = res.anotacao || "";
+                    document.getElementById('statusSalvar').innerText = "✨ Sincronizado";
                 }
             });
         }
 
         document.getElementById('txtAnotacoes').addEventListener('input', () => {
-            document.getElementById('statusSalvar').innerText = "🔄 Gravando notas...";
+            document.getElementById('statusSalvar').innerText = "🔄 Gravando...";
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(salvarNotaRemota, 2000);
         });
@@ -239,7 +395,7 @@
                     texto: texto
                 })
             }).then(() => {
-                document.getElementById('statusSalvar').innerText = "✨ Sincronizado com a Planilha!";
+                document.getElementById('statusSalvar').innerText = "✨ Salvo no Post-it!";
             });
         }
     </script>
