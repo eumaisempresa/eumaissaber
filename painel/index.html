@@ -69,7 +69,6 @@
 
         .sidebar { background-color: var(--fundo-secundario); border-right: 1px solid var(--bordas); padding: 20px; overflow-y: auto; }
         
-        /* Ajuste do Workspace de Leitura para destacar o Caderno */
         .content-body { 
             padding: 30px; 
             overflow-y: auto; 
@@ -88,7 +87,6 @@
             align-items: center;
         }
 
-        /* Itens da lista de aulas */
         .aula-item {
             padding: 12px; border-radius: 4px; cursor: pointer; margin-bottom: 8px; font-size: 14px;
             transition: all 0.2s; border: 1px solid transparent; color: var(--texto-secundario);
@@ -96,7 +94,6 @@
         }
         .aula-item:hover, .aula-item.active { background-color: var(--fundo-terciario); border-color: var(--bordas); color: var(--dourado-principal); }
         
-        /* Item bloqueado pelo plano do usuário */
         .aula-item.bloqueado {
             opacity: 0.4;
             cursor: not-allowed;
@@ -105,16 +102,13 @@
         .aula-item.bloqueado:hover { color: var(--texto-secundario); border-color: transparent; }
         .tag-trava { font-size: 10px; color: #E74C3C; border: 1px solid #E74C3C; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; }
 
-        /* =====================================================================
-           ESTILIZAÇÃO DO CADERNO PAUTADO
-        ===================================================================== */
         .folha-caderno {
             background-color: #FFFFFF;
             width: 100%;
             max-width: 800px;
-            min-height: 100% ;
+            min-height: 100%;
             padding: 50px 40px 40px 65px;
-            border-left: 2px solid #FF8585; /* Linha de margem vertical */
+            border-left: 2px solid #FF8585;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             border-radius: 2px;
             position: relative;
@@ -131,7 +125,6 @@
             white-space: pre-line;
         }
 
-        /* Regra Regex/Seletora Visual de Tópicos (Azul Profundo Corporativo) */
         .conteudo-aula-dinamico .topico-destaque {
             color: #0A3663 !important;
             font-weight: 600;
@@ -141,9 +134,6 @@
             display: block;
         }
 
-        /* =====================================================================
-           ESTILIZAÇÃO DO POST-IT
-        ===================================================================== */
         .post-it-nota {
             background-color: #FEF5B1;
             width: 100%;
@@ -181,17 +171,28 @@
         #loginOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background-color: var(--fundo-principal); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .card { background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 32px; border-radius: 4px; width: 400px; }
         .login-input { width: 100%; padding: 12px; background: var(--fundo-terciario); border: 1px solid var(--bordas); color: #fff; margin-bottom: 16px; border-radius: 4px; font-family: 'DM Sans', sans-serif; }
+        .link-recuperar { font-size: 12px; color: var(--texto-secundario); cursor: pointer; text-decoration: underline; margin-top: 12px; display: inline-block; }
+        .link-recuperar:hover { color: var(--dourado-principal); }
     </style>
 </head>
 <body>
 
     <div id="loginOverlay">
-        <div class="card" style="text-align: center;">
+        <div class="card" id="boxLogin" style="text-align: center;">
             <h2 style="margin-bottom: 16px;">Mesa Executiva Saber⁺</h2>
             <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 24px;">Insira suas credenciais corporativas do ecossistema EU⁺.</p>
             <input type="text" id="loginEmail" placeholder="E-mail do Aluno" class="login-input">
             <input type="password" id="loginSenha" placeholder="Senha Provisória" class="login-input">
             <button id="btnLogin" style="width: 100%; padding: 12px;">Autenticar Acesso</button>
+            <span class="link-recuperar" onclick="alternarTelas(true)">Esqueceu ou quer alterar a senha?</span>
+        </div>
+
+        <div class="card" id="boxRecuperar" style="text-align: center; display: none;">
+            <h2 style="margin-bottom: 16px;">Alterar Senha</h2>
+            <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 24px;">Insira o e-mail cadastrado. Uma nova senha aleatória será gerada e enviada para a sua caixa de entrada.</p>
+            <input type="text" id="recuperarEmail" placeholder="Digite seu e-mail cadastrado" class="login-input">
+            <button id="btnRecuperar" style="width: 100%; padding: 12px;">Solicitar Nova Senha</button>
+            <span class="link-recuperar" onclick="alternarTelas(false)">Voltar para a tela de Login</span>
         </div>
     </div>
 
@@ -239,7 +240,37 @@
         let currentAulaId = "";
         let saveTimeout;
 
-        // LOGIN DO ALUNO ATUALIZADO PARAMS MÚLTIPLOS
+        function alternarTelas(mostrarRecuperar) {
+            document.getElementById('boxLogin').style.display = mostrarRecuperar ? 'none' : 'block';
+            document.getElementById('boxRecuperar').style.display = mostrarRecuperar ? 'block' : 'none';
+        }
+
+        // DISPARADOR DO BOTÃO DE ALTERAR/RECUPERAR SENHA VIA API
+        document.getElementById('btnRecuperar').addEventListener('click', function() {
+            const email = document.getElementById('recuperarEmail').value.trim();
+            if(!email) return alert("Por favor, digite seu e-mail.");
+            
+            this.innerText = "Processando Alteração...";
+            this.disabled = true;
+
+            fetch(`${SCRIPT_URL}?action=alterarSenha&email=${encodeURIComponent(email)}`)
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) {
+                    alert("Sucesso! Uma nova senha foi gerada e enviada para o seu e-mail.");
+                    alternarTelas(false); // Retorna pro login
+                } else {
+                    alert("Erro: " + res.error);
+                }
+                this.innerText = "Solicitar Nova Senha";
+                this.disabled = false;
+            }).catch(() => {
+                alert("Erro ao processar requisição na central.");
+                this.innerText = "Solicitar Nova Senha";
+                this.disabled = false;
+            });
+        });
+
         document.getElementById('btnLogin').addEventListener('click', function() {
             const email = document.getElementById('loginEmail').value.trim();
             const senha = document.getElementById('loginSenha').value.trim();
@@ -260,11 +291,11 @@
                     document.getElementById('loginOverlay').style.display = 'none';
                     carregarMenu();
                 } else {
-                    alert(res.error || "Acesso negado. Credenciais inválidas ou plano inativo.");
+                    alert(res.error || "Acesso negado. Credenciais inválidas.");
                     this.innerText = "Autenticar Acesso";
                 }
             }).catch(() => {
-                alert("Erro ao conectar à central. Verifique sua conexão.");
+                alert("Erro de comunicação com o servidor.");
                 this.innerText = "Autenticar Acesso";
             });
         });
@@ -299,7 +330,6 @@
             if(uniqueCursos.length > 0) renderizarAulas(uniqueCursos[0]);
         }
 
-        // LOGÍSTICA DE COMPORTAMENTO E TRAVA DE PLANOS NO FRONT-END
         function renderizarAulas(cursoId) {
             currentCursoId = cursoId;
             const container = document.getElementById('listaAulas');
@@ -310,23 +340,12 @@
             aulasFiltradas.forEach((aula, index) => {
                 let bloqueada = false;
                 
-                // Regra 1: Validação do Plano Free (Bloqueia tudo que não for o Módulo/Capítulo 1)
                 if(restricoesPlano && restricoesPlano.limitarCapitulos) {
-                    if(aula.idAula !== "AULA01" && index > 0) {
-                        bloqueada = true;
-                    }
+                    if(aula.idAula !== "AULA01" && index > 0) bloqueada = true;
                 }
-                
-                // Regra 2: Validação do Período de Teste Freemium (Verifica se está bloqueado por tempo)
-                if(restricoesPlano && restricoesPlano.bloqueado) {
-                    bloqueada = true;
-                }
-                
-                // Regra 3: Validação do Plano Básico (Liberação sequencial por meses de contratação)
+                if(restricoesPlano && restricoesPlano.bloqueado) bloqueada = true;
                 if(restricoesPlano && restricoesPlano.limitarPorMeses) {
-                    if(index >= restricoesPlano.limitarPorMeses) {
-                        bloqueada = true;
-                    }
+                    if(index >= restricoesPlano.limitarPorMeses) bloqueada = true;
                 }
 
                 const div = document.createElement('div');
@@ -346,20 +365,17 @@
             });
         }
 
-        // COORDENAÇÃO DE HIGHLIGHTS VISUAIS NOS TÓPICOS NUMÉRICOS
         function exibirAula(aula) {
             currentAulaId = aula.idAula;
             document.getElementById('aulaTitulo').innerText = aula.tituloAula;
-            document.getElementById('aulaConteudo').innerHTML = "<em>Carregando conteúdo executivo direto do Google Docs corporativo...</em>";
+            document.getElementById('aulaConteudo').innerHTML = "<em>Carregando conteúdo executivo...</em>";
             
             fetch(`${SCRIPT_URL}?action=carregarAula&idAmbiente=${currentAmbiente}&idCurso=${currentCursoId}&idAula=${currentAulaId}&idDoc=${aula.idDoc}`)
             .then(res => res.json())
             .then(res => {
                 if(res.success) {
-                    // Processa o texto quebrando linhas e identificando tópicos decimais (ex: 1.1, 2.3)
                     let textoFormatado = res.conteudo.split('\n').map(linha => {
                         let trimLinha = linha.trim();
-                        // Se a linha começar com números seguidos de ponto (ex: 1. ou 1.2.3), aplica classe azul
                         if (/^\d+(\.\d+)*\.?/.test(trimLinha)) {
                             return `<span class="topico-destaque">${linha}</span>`;
                         }
