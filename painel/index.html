@@ -70,12 +70,10 @@
         .sidebar { background-color: var(--fundo-secundario); border-right: 1px solid var(--bordas); padding: 20px; overflow-y: auto; }
         
         .content-body { 
-            padding: 25px; 
+            padding: 40px 20px; 
             overflow-y: auto; 
             background-color: #EAEFF4; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: block; /* Mudado de flex para block para o scroll se comportar corretamente */
         }
 
         .notes-panel { 
@@ -117,12 +115,14 @@
         }
 
         /* AJUSTE FIX DO CADERNO INTERATIVO PARA IR ATÉ O FINAL DA TELA */
-        .folha-caderno {
+       .folha-caderno {
             background-color: #FFFFFF;
             width: 100%;
             max-width: 850px;
-            min-height: calc(100vh - 120px); /* Ocupa dinamicamente a altura total disponível */
-            padding: 45px 40px 40px 65px;
+            margin: 0 auto; /* Centraliza a folha na tela horizontalmente */
+            min-height: 100%; /* Garante que ela ocupe toda a altura visível inicial */
+            height: auto; /* Permite expansão infinita baseada no volume do texto */
+            padding: 45px 40px 50px 65px; /* Aumentado padding inferior para margem de respiro */
             border-left: 2px solid #FF8585;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             border-radius: 2px;
@@ -130,8 +130,9 @@
             background-image: linear-gradient(rgba(196, 209, 223, 0.35) 1px, transparent 1px);
             background-size: 100% 28px;
             line-height: 28px;
+            display: inline-block; /* Força o elemento a respeitar o tamanho real do seu conteúdo interno */
         }
-
+        
         .conteudo-aula-dinamico {
             font-family: 'DM Sans', sans-serif;
             font-size: 15px;
