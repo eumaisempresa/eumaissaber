@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EU⁺ Saber - Inteligência e Liderança Corporativa</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+        :root {
+            --fundo-principal: #060E18;
+            --fundo-secundario: #0A1624;
+            --fundo-terciario: #0E1E30;
+            --dourado-principal: #C4974A;
+            --dourado-secundario: #D4AA62;
+            --texto-principal: #EEF0F2;
+            --texto-secundario: #7A8FA3;
+            --bordas: rgba(196, 151, 74, 0.18);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--fundo-principal);
+            color: var(--texto-principal);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, .brand-title {
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.02em;
+            color: var(--dourado-principal);
+        }
+
+        button, .btn {
+            background-color: transparent;
+            border: 1px solid var(--dourado-principal);
+            color: var(--dourado-principal);
+            padding: 12px 24px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        button:hover, .btn:hover {
+            background-color: var(--dourado-principal);
+            color: var(--fundo-principal);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        .card {
+            background-color: var(--fundo-secundario);
+            border: 1px solid var(--bordas);
+            padding: 32px;
+            border-radius: 4px;
+            margin-bottom: 24px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            background: radial-gradient(circle at center, var(--fundo-secundario) 0%, var(--fundo-principal) 100%);
+            border-bottom: 1px solid var(--bordas);
+        }
+        .hero h1 { font-size: 54px; margin-bottom: 16px; font-weight: 400; }
+        .hero p { font-size: 18px; color: var(--texto-secundario); max-width: 600px; margin: 0 auto 32px auto; }
+        
+        .grid-frentes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .frente-card { border-left: 3px solid var(--dourado-principal); }
+
+        .footer-signature {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--bordas);
+            color: var(--texto-secundario);
+            font-size: 12px;
+            letter-spacing: 0.05em;
+            margin-top: 60px;
+        }
+        .footer-signature a { color: var(--dourado-principal); text-decoration: none; margin: 0 10px; }
+        .slogan { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: var(--dourado-secundario); margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>EU⁺ Saber</h1>
+        <p>Desenvolvimento cognitivo e tecnológico para a alta liderança. Transforme intuição lógica em resultados exponenciais de mercado.</p>
+        <a href="cadastro.html" class="btn">Iniciar Jornada</a>
+        <a href="painel.html" class="btn" style="margin-left: 15px; border-color: var(--texto-secundario); color: var(--texto-secundario);">Acessar Painel</a>
+    </div>
+
+    <div class="container">
+        <h2 style="text-align: center; font-size: 32px; margin-bottom: 40px;">Nossas Frentes de Desenvolvimento</h2>
+        <div class="grid-frentes">
+            <div class="card frente-card">
+                <h3>EU⁺ Executivo</h3>
+                <p style="color: var(--texto-secundario); margin: 12px 0;">"Estrutura para quem lidera."</p>
+                <p>Formação de alta governança, arquitetura de sistemas híbridos de IA e controle de custos operacionais críticos de tecnologia.</p>
+            </div>
+            <div class="card frente-card" style="border-left-color: #C4A265;">
+                <h3>EU⁺ Negócio</h3>
+                <p style="color: var(--texto-secundario); margin: 12px 0;">"Mais controle. Mais clareza. Mais gestão."</p>
+                <p>Modelos preditivos, eficiência na esteira de dados e redução radical no desperdício de tokens operacionais.</p>
+            </div>
+            <div class="card frente-card" style="border-left-color: #4A9BC4;">
+                <h3>EU⁺ Vida</h3>
+                <p style="color: var(--texto-secundario); margin: 12px 0;">"Organize sua vida antes que a vida organize você."</p>
+                <p>Gestão de tempo, foco estratégico e eliminação proativa de ruído cognitivo no dia a dia da alta liderança.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-signature">
+        <div class="slogan">"Você é o EU. Nós somos o ⁺ que soma com você."</div>
+        <p>Grupo EU⁺ &gt; EU⁺ Empresa &gt; EU⁺ Saber &gt; Home</p>
+        <div style="margin-top: 15px;">
+            <a href="index.html">Home</a> | <a href="cadastro.html">Cadastro</a> | <a href="painel.html">Painel</a> | <a href="gestor.html">Gestor</a>
+        </div>
+    </div>
+</body>
+</html>
