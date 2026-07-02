@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Executivo - EU⁺ Saber</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+        :root {
+            --fundo-principal: #060E18;
+            --fundo-secundario: #0A1624;
+            --fundo-terciario: #0E1E30;
+            --dourado-principal: #C4974A;
+            --dourado-secundario: #D4AA62;
+            --texto-principal: #EEF0F2;
+            --texto-secundario: #7A8FA3;
+            --bordas: rgba(196, 151, 74, 0.18);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--fundo-principal);
+            color: var(--texto-principal);
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .brand-title, #aulaTitulo, h2, h3 { font-family: 'Cormorant Garamond', serif; color: var(--dourado-principal); }
+
+        header {
+            background-color: var(--fundo-secundario);
+            border-bottom: 1px solid var(--bordas);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        select, textarea {
+            background-color: var(--fundo-terciario);
+            border: 1px solid var(--bordas);
+            color: var(--texto-principal);
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        button {
+            background-color: transparent;
+            border: 1px solid var(--dourado-principal);
+            color: var(--dourado-principal);
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+        button:hover { background-color: var(--dourado-principal); color: var(--fundo-principal); }
+
+        .painel-wrapper {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            height: calc(100vh - 70px);
+        }
+
+        .sidebar { background-color: var(--fundo-secundario); border-right: 1px solid var(--bordas); padding: 20px; overflow-y: auto; }
+        .content-body { padding: 40px; overflow-y: auto; background-color: var(--fundo-principal); }
+        .notes-panel { background-color: var(--fundo-secundario); border-left: 1px solid var(--bordas); padding: 20px; display: flex; flex-direction: column; }
+
+        .aula-item {
+            padding: 12px; border-radius: 4px; cursor: pointer; margin-bottom: 8px; font-size: 14px;
+            transition: all 0.2s; border: 1px solid transparent; color: var(--texto-secundario);
+        }
+        .aula-item:hover, .aula-item.active { background-color: var(--fundo-terciario); border-color: var(--bordas); color: var(--dourado-principal); }
+        
+        .status-save { font-size: 11px; color: var(--texto-secundario); text-align: right; margin-top: 5px; }
+        #loginOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background-color: var(--fundo-principal); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .card { background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 32px; border-radius: 4px; width: 400px; }
+    </style>
+</head>
+<body>
+
+    <div id="loginOverlay">
+        <div class="card" style="text-align: center;">
+            <h2 style="margin-bottom: 16px;">Ambiente Executivo EU⁺</h2>
+            <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 24px;">Insira seu ID de Ambiente para validação e ancoragem de dados.</p>
+            <input type="text" id="loginAmbiente" placeholder="Ex: EXEC0001" style="text-align: center; width: 100%; padding: 12px; background: var(--fundo-terciario); border: 1px solid var(--bordas); color: #fff; margin-bottom: 16px; border-radius: 4px;">
+            <button id="btnLogin" style="width: 100%; padding: 12px;">Acessar Plataforma</button>
+        </div>
+    </div>
+
+    <header>
+        <div style="font-size: 24px; font-weight: bold;" class="brand-title">EU⁺ Saber</div>
+        <div>
+            <select id="selectCurso" style="width: 280px;"></select>
+        </div>
+        <div id="nomeUsuario" style="font-size: 14px; color: var(--dourado-principal);">Ambiente: <span id="lblAmbiente"></span></div>
+    </header>
+
+    <div class="painel-wrapper">
+        <div class="sidebar" id="listaAulas">
+            <h4 style="color: var(--texto-secundario); margin-bottom: 15px; font-size: 12px; text-transform: uppercase;">Cronograma do Curso</h4>
+        </div>
+        
+        <div class="content-body">
+            <div id="aulaTitulo" style="margin-bottom: 20px; font-size: 32px;">Selecione uma aula ao lado para iniciar</div>
+            <div id="aulaConteudo" style="color: var(--texto-principal); line-height: 1.8; font-size: 16px; white-space: pre-line;">
+                Por favor, escolha o módulo no menu à esquerda para renderizar a injeção de contexto estruturada do seu manual de estudos.
+            </div>
+        </div>
+        
+        <div class="notes-panel">
+            <h3 style="font-size: 18px; margin-bottom: 10px;">✍️ Minhas Anotações</h3>
+            <p style="color: var(--texto-secundario); font-size: 12px; margin-bottom: 15px;">Seus resumos executivos são sincronizados automaticamente com sua aba exclusiva da planilha.</p>
+            <textarea id="txtAnotacoes" style="flex: 1; resize: none; margin-bottom: 10px;" placeholder="Digite aqui seus insights..."></textarea>
+            <div class="status-save" id="statusSalvar">✨ Conectado à Planilha Master</div>
+            <button id="btnSalvarNota" style="margin-top: 10px; width: 100%;">Forçar Sincronização</button>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6nf5lgvSTCtX2n4kNKaQHqfJtv9QvtjJGgBMcmrtLpGybae7eLb5vlDm06bzrxgF2DA/exec";
+        let currentAmbiente = "";
+        let dbCursos = [];
+        let currentCursoId = "";
+        let currentAulaId = "";
+        let saveTimeout;
+
+        document.getElementById('btnLogin').addEventListener('click', function() {
+            const id = document.getElementById('loginAmbiente').value.trim();
+            if(!id) return alert("Por favor, digite seu ID de Ambiente.");
+            
+            this.innerText = "Autenticando...";
+            fetch(`${SCRIPT_URL}?action=validarAcesso&idAmbiente=${id}`)
+            .then(res => res.json())
+            .then(res => {
+                if(res.autorizado) {
+                    currentAmbiente = id;
+                    document.getElementById('lblAmbiente').innerText = id;
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    carregarMenu();
+                } else {
+                    alert("ID inválido ou Plano Inativo no Painel Gestor.");
+                    this.innerText = "Acessar Plataforma";
+                }
+            }).catch(() => {
+                alert("Conectando ao ambiente.");
+                currentAmbiente = id;
+                document.getElementById('loginOverlay').style.display = 'none';
+                carregarMenu();
+            });
+        });
+
+        function carregarMenu() {
+            fetch(`${SCRIPT_URL}?action=carregarMenu`)
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) {
+                    dbCursos = res.dados;
+                    renderizarSeletorCursos();
+                }
+            });
+        }
+
+        function renderizarSeletorCursos() {
+            const select = document.getElementById('selectCurso');
+            const uniqueCursos = [...new Set(dbCursos.map(c => c.idCurso))];
+            select.innerHTML = "";
+            uniqueCursos.forEach(cId => {
+                const curso = dbCursos.find(c => c.idCurso === cId);
+                const opt = document.createElement('option');
+                opt.value = cId;
+                opt.innerText = curso.nomeCurso;
+                select.appendChild(opt);
+            });
+            
+            select.addEventListener('change', (e) => {
+                renderizarAulas(e.target.value);
+            });
+            if(uniqueCursos.length > 0) renderizarAulas(uniqueCursos[0]);
+        }
+
+        function renderizarAulas(cursoId) {
+            currentCursoId = cursoId;
+            const container = document.getElementById('listaAulas');
+            container.innerHTML = `<h4 style="color: var(--texto-secundario); margin-bottom: 15px; font-size: 12px; text-transform: uppercase;">Cronograma do Curso</h4>`;
+            
+            const aulasFiltradas = dbCursos.filter(c => c.idCurso === cursoId);
+            aulasFiltradas.forEach(aula => {
+                const div = document.createElement('div');
+                div.className = "aula-item";
+                div.innerText = aula.tituloAula;
+                div.addEventListener('click', () => {
+                    document.querySelectorAll('.aula-item').forEach(el => el.classList.remove('active'));
+                    div.classList.add('active');
+                    exibirAula(aula);
+                });
+                container.appendChild(div);
+            });
+        }
+
+        function exibirAula(aula) {
+            currentAulaId = aula.idAula;
+            document.getElementById('aulaTitulo').innerText = aula.tituloAula;
+            document.getElementById('aulaConteudo').innerText = "Carregando conteúdo em tempo real direto do Google Docs...";
+            
+            fetch(`${SCRIPT_URL}?action=carregarAula&idAmbiente=${currentAmbiente}&idCurso=${currentCursoId}&idAula=${currentAulaId}&idDoc=${aula.idDoc}`)
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) {
+                    document.getElementById('aulaConteudo').innerText = res.conteudo;
+                    document.getElementById('txtAnotacoes').value = res.anotacao || "";
+                }
+            });
+        }
+
+        document.getElementById('txtAnotacoes').addEventListener('input', () => {
+            document.getElementById('statusSalvar').innerText = "🔄 Gravando notas...";
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(salvarNotaRemota, 2000);
+        });
+
+        document.getElementById('btnSalvarNota').addEventListener('click', salvarNotaRemota);
+
+        function salvarNotaRemota() {
+            if(!currentAulaId) return;
+            const texto = document.getElementById('txtAnotacoes').value;
+            
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    action: "salvarAnotacao",
+                    idAmbiente: currentAmbiente,
+                    idCurso: currentCursoId,
+                    idAula: currentAulaId,
+                    texto: texto
+                })
+            }).then(() => {
+                document.getElementById('statusSalvar').innerText = "✨ Sincronizado com a Planilha!";
+            });
+        }
+    </script>
+</body>
+</html>
