@@ -168,7 +168,7 @@
                 document.getElementById('resAmbiente').innerText = randomId;
                 document.getElementById('resSenha').innerText = generatedPassword;
 
-                const textWa = `Olá! Seu cadastro no ecossistema EU⁺ Saber foi concluído com sucesso.\n\nUsuário: ${document.getElementById('email').value}\nSenha: ${generatedPassword}\nID Ambiente: ${randomId}\n\nAcesse seu painel executivo aqui: https://eumaisempresa.github.io/eumaissaber/painel.html`;
+                const textWa = `Olá! Seu cadastro no ecossistema EU⁺ Saber foi concluído com sucesso.\n\nUsuário: ${document.getElementById('email').value}\nSenha: ${generatedPassword}\nID Ambiente: ${randomId}\n\nAcesse seu painel executivo aqui: https://eumaisempresa.github.io/sabermais/painel.html`;
                 document.getElementById('btnWhatsAppLink').href = `https://wa.me/${document.getElementById('whatsapp').value}?text=${encodeURIComponent(textWa)}`;
             }).catch(err => {
                 alert("Erro ao conectar ao Script do Google.");
