@@ -37,6 +37,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         select {
@@ -48,7 +56,7 @@
             font-family: 'DM Sans', sans-serif;
         }
 
-        button {
+        button, .btn-upgrade-global {
             background-color: transparent;
             border: 1px solid var(--dourado-principal);
             color: var(--dourado-principal);
@@ -58,8 +66,22 @@
             text-transform: uppercase;
             font-size: 11px;
             transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
         }
-        button:hover { background-color: var(--dourado-principal); color: var(--fundo-principal); }
+        button:hover, .btn-upgrade-global:hover { background-color: var(--dourado-principal); color: var(--fundo-principal); }
+
+        /* Estilo do botão de upgrade global em destaque */
+        .btn-upgrade-global {
+            background-color: var(--dourado-principal);
+            color: var(--fundo-principal);
+            border-color: var(--dourado-principal);
+        }
+        .btn-upgrade-global:hover {
+            background-color: transparent;
+            color: var(--dourado-principal);
+        }
 
         .painel-wrapper {
             display: grid;
@@ -73,7 +95,7 @@
             padding: 40px 20px; 
             overflow-y: auto; 
             background-color: #EAEFF4; 
-            display: block; /* Mudado de flex para block para o scroll se comportar corretamente */
+            display: block;
         }
 
         .notes-panel { 
@@ -93,36 +115,26 @@
         .aula-item:hover, .aula-item.active { background-color: var(--fundo-terciario); border-color: var(--bordas); color: var(--dourado-principal); }
         
         .aula-item.bloqueado {
-            opacity: 0.6;
-            background: rgba(0,0,0,0.05) !important;
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: rgba(0,0,0,0.15) !important;
         }
         
-        /* Ajuste do botão de upgrade dinâmico */
-        .tag-trava { 
-            font-size: 9px; 
+        .tag-trava-discreta { 
+            font-size: 10px; 
             color: #E74C3C; 
-            border: 1px solid #E74C3C; 
-            padding: 3px 6px; 
-            border-radius: 3px; 
             text-transform: uppercase; 
-            cursor: pointer;
             font-weight: bold;
-            transition: all 0.2s;
-        }
-        .tag-trava:hover {
-            background-color: #E74C3C;
-            color: #fff;
         }
 
-        /* AJUSTE FIX DO CADERNO INTERATIVO PARA IR ATÉ O FINAL DA TELA */
        .folha-caderno {
             background-color: #FFFFFF;
             width: 100%;
             max-width: 850px;
-            margin: 0 auto; /* Centraliza a folha na tela horizontalmente */
-            min-height: 100%; /* Garante que ela ocupe toda a altura visível inicial */
-            height: auto; /* Permite expansão infinita baseada no volume do texto */
-            padding: 45px 40px 50px 65px; /* Aumentado padding inferior para margem de respiro */
+            margin: 0 auto;
+            min-height: 100%;
+            height: auto;
+            padding: 45px 40px 50px 65px;
             border-left: 2px solid #FF8585;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             border-radius: 2px;
@@ -130,7 +142,7 @@
             background-image: linear-gradient(rgba(196, 209, 223, 0.35) 1px, transparent 1px);
             background-size: 100% 28px;
             line-height: 28px;
-            display: inline-block; /* Força o elemento a respeitar o tamanho real do seu conteúdo interno */
+            display: inline-block;
         }
         
         .conteudo-aula-dinamico {
@@ -189,6 +201,98 @@
         .login-input { width: 100%; padding: 12px; background: var(--fundo-terciario); border: 1px solid var(--bordas); color: #fff; margin-bottom: 16px; border-radius: 4px; font-family: 'DM Sans', sans-serif; }
         .link-recuperar { font-size: 12px; color: var(--texto-secundario); cursor: pointer; text-decoration: underline; margin-top: 12px; display: inline-block; }
         .link-recuperar:hover { color: var(--dourado-principal); }
+
+        /* Botão flutuante mobile (escondido por padrão no PC) */
+        .floating-note-btn {
+            display: none;
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--dourado-principal);
+            color: var(--fundo-principal);
+            border-radius: 50%;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            z-index: 999;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* RESPONSIVIDADE MOBILE COMPLETA */
+        @media screen and (max-width: 900px) {
+            header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 15px;
+                text-align: center;
+            }
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            select, .btn-upgrade-global {
+                width: 100%;
+                text-align: center;
+            }
+
+            .painel-wrapper {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .sidebar {
+                max-height: 250px;
+                border-right: none;
+                border-bottom: 1px solid var(--bordas);
+            }
+
+            .content-body {
+                padding: 20px 10px;
+            }
+
+            .folha-caderno {
+                padding: 30px 15px 30px 25px;
+            }
+
+            /* Transforma o painel lateral de notas em um Modal Pop-up no Celular */
+            .notes-panel {
+                display: none; /* Controlado via JS */
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+                max-width: 340px;
+                background-color: var(--fundo-secundario);
+                border: 2px solid var(--dourado-principal);
+                border-radius: 8px;
+                padding: 20px;
+                z-index: 1000;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            }
+
+            .notes-panel.open {
+                display: flex !important;
+            }
+
+            .floating-note-btn {
+                display: flex;
+            }
+
+            /* Overlay escuro de fundo para quando abrir a nota no celular */
+            .modal-backdrop {
+                display: none;
+                position: fixed;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.7);
+                z-index: 998;
+            }
+            .modal-backdrop.open { display: block; }
+        }
     </style>
 </head>
 <body>
@@ -214,8 +318,9 @@
 
     <header>
         <div style="font-size: 24px; font-weight: bold;" class="brand-title">EU⁺ Saber</div>
-        <div>
-            <select id="selectCurso" style="width: 280px;"></select>
+        <div class="header-actions">
+            <select id="selectCurso"></select>
+            <a href="https://www.asaas.com/c/seu-link-de-assinatura-aqui" target="_blank" class="btn-upgrade-global" id="btnUpgradeGlobal">⭐ Desbloquear Plano Premium</a>
         </div>
         <div id="nomeUsuario" style="font-size: 14px; color: var(--dourado-principal);">Usuário: <span id="lblNomeAluno">---</span> <span id="lblAmbiente" style="opacity:0.5; font-size:11px;"></span></div>
     </header>
@@ -234,9 +339,11 @@
             </div>
         </div>
         
-        <div class="notes-panel">
+        <div class="modal-backdrop" id="noteBackdrop" onclick="toggleMobileNote()"></div>
+
+        <div class="notes-panel" id="notesPanel">
             <h3 style="font-size: 18px; margin-bottom: 5px; text-align: center;">✍️ Caderno de Insights</h3>
-            <p style="color: var(--texto-secundario); font-size: 12px; text-align: center; margin-bottom: 15px;">Sincronização em nuvem ativa</p>
+            <p style="color: var(--texto-secundario); font-size: 12px; text-align: center; margin-bottom: 5px;">Sincronização em nuvem ativa</p>
             
             <div class="post-it-nota">
                 <div class="post-it-alfinete"></div>
@@ -244,12 +351,14 @@
                 <div class="status-save" id="statusSalvar">✨ Conectado à Nuvem</div>
             </div>
             <button id="btnSalvarNota" style="margin-top: 25px; width: 100%; max-width: 280px;">Sincronizar Agora</button>
+            <button id="btnFecharNotaMobile" style="margin-top: 10px; width: 100%; max-width: 280px; display: none; border-color: #E74C3C; color: #E74C3C;" onclick="toggleMobileNote()">Fechar Bloco</button>
         </div>
     </div>
 
+    <button class="floating-note-btn" onclick="toggleMobileNote()">✍️</button>
+
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6nf5lgvSTCtX2n4kNKaQHqfJtv9QvtjJGgBMcmrtLpGybae7eLb5vlDm06bzrxgF2DA/exec";
-        // LINK DO CHECKOUT DO SEU PRODUTO NO ASAAS:
         const URL_ASAAS_UPGRADE = "https://www.asaas.com/c/seu-link-de-assinatura-aqui"; 
 
         let currentAmbiente = "";
@@ -258,6 +367,19 @@
         let currentCursoId = "";
         let currentAulaId = "";
         let saveTimeout;
+
+        // Gerencia abertura e fechamento do bloco de notas no celular
+        function toggleMobileNote() {
+            if (window.innerWidth <= 900) {
+                const panel = document.getElementById('notesPanel');
+                const backdrop = document.getElementById('noteBackdrop');
+                const btnFechar = document.getElementById('btnFecharNotaMobile');
+                
+                panel.classList.toggle('open');
+                backdrop.classList.toggle('open');
+                btnFechar.style.display = panel.classList.contains('open') ? 'block' : 'none';
+            }
+        }
 
         function alternarTelas(mostrarRecuperar) {
             document.getElementById('boxLogin').style.display = mostrarRecuperar ? 'none' : 'block';
@@ -307,6 +429,12 @@
                     document.getElementById('lblNomeAluno').innerText = res.nome;
                     document.getElementById('lblAmbiente').innerText = `(${res.idAmbiente})`;
                     document.getElementById('loginOverlay').style.display = 'none';
+
+                    // Oculta o botão de upgrade se o usuário já for premium/ilimitado
+                    if (restricoesPlano && !restricoesPlano.limitarCapitulos && !restricoesPlano.bloqueado) {
+                        document.getElementById('btnUpgradeGlobal').style.display = 'none';
+                    }
+
                     carregarMenu();
                 } else {
                     alert(res.error || "Acesso negado. Credenciais inválidas.");
@@ -370,8 +498,7 @@
                 div.className = "aula-item" + (bloqueada ? " bloqueado" : "");
                 
                 if(bloqueada) {
-                    // Botão interativo que direciona o aluno para a fatura/checkout do Asaas ao clicar
-                    div.innerHTML = `<span>${aula.tituloAula}</span> <span class="tag-trava" onclick="window.open('${URL_ASAAS_UPGRADE}', '_blank')">🔑 Upgrade</span>`;
+                    div.innerHTML = `<span>${aula.tituloAula}</span> <span class="tag-trava-discreta">🔒 Bloqueado</span>`;
                 } else {
                     div.innerText = aula.tituloAula;
                     div.addEventListener('click', () => {
