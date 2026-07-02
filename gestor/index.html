@@ -27,34 +27,60 @@
             font-weight: 300;
             line-height: 1.6;
             padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         h1, h3, h2 { font-family: 'Cormorant Garamond', serif; color: var(--dourado-principal); }
 
-        .container { max-width: 1200px; margin: 0 auto; }
-        .card { background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 24px; border-radius: 4px; margin-bottom: 24px; }
+        .container { max-width: 1300px; margin: 0 auto; width: 100%; flex: 1; }
+        .card { background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 24px; border-radius: 4px; margin-bottom: 24px; width: 100%; }
 
-        .gestor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
         table { width: 100%; border-collapse: collapse; margin-top: 16px; background-color: var(--fundo-secundario); }
-        th, td { padding: 12px 16px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--bordas); }
-        th { background-color: var(--fundo-terciario); color: var(--dourado-principal); }
+        th, td { padding: 12px 14px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--bordas); vertical-align: middle; }
+        th { background-color: var(--fundo-terciario); color: var(--dourado-principal); font-weight: 500; }
         
         input, select, textarea {
             background-color: var(--fundo-terciario); border: 1px solid var(--bordas); color: #fff;
-            padding: 12px; width: 100%; margin-bottom: 16px; border-radius: 4px; font-family: 'DM Sans', sans-serif;
+            padding: 8px 10px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 13px;
         }
 
-        button {
+        .btn-acao {
             background-color: transparent; border: 1px solid var(--dourado-principal); color: var(--dourado-principal);
-            padding: 12px; width: 100%; cursor: pointer; text-transform: uppercase; font-weight: 500; border-radius: 4px;
+            padding: 6px 10px; cursor: pointer; text-transform: uppercase; font-weight: 500; border-radius: 4px; font-size: 11px;
+            margin-right: 4px; display: inline-block;
         }
-        button:hover { background-color: var(--dourado-principal); color: var(--fundo-principal); }
+        .btn-acao:hover { background-color: var(--dourado-principal); color: var(--fundo-principal); }
 
-        .kpi-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
-        .kpi-card { background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 24px; text-align: center; border-radius: 4px; }
-        .kpi-value { font-size: 32px; font-weight: bold; color: var(--dourado-principal); }
+        .kpi-container { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin-bottom: 32px; }
+        .kpi-card { background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 16px 8px; text-align: center; border-radius: 4px; }
+        .kpi-value { font-size: 26px; font-weight: bold; color: var(--dourado-principal); }
+        .kpi-title { font-size: 11px; color: var(--texto-secundario); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
 
         #authOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background-color: var(--fundo-principal); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        
+        /* Ajuste Fino do Rodapé */
+        .footer-signature { 
+            margin-top: 60px; 
+            border-top: 1px solid var(--bordas); 
+            padding-top: 24px; 
+            text-align: center; 
+            width: 100%;
+        }
+        .footer-signature .slogan { 
+            font-family: 'Cormorant Garamond', serif; 
+            font-style: italic; 
+            font-size: 18px; 
+            color: var(--dourado-principal); 
+            margin-bottom: 8px; 
+        }
+        .footer-signature p { 
+            font-size: 12px; 
+            color: var(--texto-secundario); 
+            letter-spacing: 1px; 
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
@@ -62,77 +88,82 @@
     <div id="authOverlay">
         <div class="card" style="width: 350px; text-align: center;">
             <h2 style="margin-bottom: 16px;">Acesso Restrito Gestor</h2>
-            <input type="password" id="senhaGestor" placeholder="Insira a senha master admin" style="text-align: center;">
-            <button id="btnAuthGestor">Autenticar Admin</button>
+            <input type="password" id="senhaGestor" placeholder="Insira a senha master admin" style="text-align: center; width: 100%; margin-bottom: 16px;">
+            <button id="btnAuthGestor" class="btn-acao" style="width: 100%; padding: 12px; font-size: 13px;">Autenticar Admin</button>
         </div>
     </div>
 
     <div class="container">
         <h1 style="font-size: 36px; margin-bottom: 8px;">Painel Master do Gestor</h1>
-        <p style="color: var(--texto-secundario); margin-bottom: 40px;">Gerenciamento de Ambientes Estáticos, KPIs e Disparos Automáticos.</p>
+        <p style="color: var(--texto-secundario); margin-bottom: 40px;">Gerenciamento de Ambientes Estáticos, KPIs e Prospecção Ativa Corporativa.</p>
 
+        <!-- Novos KPIs Operacionais Dinâmicos -->
         <div class="kpi-container">
             <div class="kpi-card">
-                <div class="kpi-value">1</div>
-                <div style="font-size: 13px; color: var(--texto-secundario);">Ambiente Ativo</div>
+                <div class="kpi-value" id="kpiCursos">0</div>
+                <div class="kpi-title">Cursos</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-value">100%</div>
-                <div style="font-size: 13px; color: var(--texto-secundario);">Conversão (ROI)</div>
+                <div class="kpi-value" id="kpiUsuarios">0</div>
+                <div class="kpi-title">Total Usuários</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-value">R$ 450M</div>
-                <div style="font-size: 13px; color: var(--texto-secundario);">Eficiência Estimada</div>
+                <div class="kpi-value" id="kpiFree">0</div>
+                <div class="kpi-title">Qtd Free</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiPremium">0</div>
+                <div class="kpi-title">Qtd Premium</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiFreemium">0</div>
+                <div class="kpi-title">Qtd Freemium</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiBasico">0</div>
+                <div class="kpi-title">Qtd Básico</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiPersonalizado">0</div>
+                <div class="kpi-title">Personalizado</div>
             </div>
         </div>
 
-        <div class="gestor-grid">
-            <div class="card">
-                <h3>👥 Alunos e Planos Ativos</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID Ambiente</th>
-                            <th>Nome</th>
-                            <th>Empresa</th>
-                            <th>Plano</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>EXEC0001</td>
-                            <td>Bruno Vieira</td>
-                            <td>Grupo Coutinho</td>
-                            <td>Personalizado</td>
-                            <td style="color: #25D366; font-weight: 500;">Ativo</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="card">
-                <h3>💬 Régua de Impulso Executivo (WhatsApp)</h3>
-                <p style="font-size: 14px; color: var(--texto-secundario); margin-bottom: 20px;">Estimule upgrades e renovações através de mensagens direcionadas.</p>
-                
-                <label>Selecionar Cliente</label>
-                <select id="selectAlunoWa">
-                    <option value="27997161826">Bruno Vieira (Grupo Coutinho)</option>
-                </select>
-
-                <label>Template da Mensagem Comercial</label>
-                <textarea style="height: 120px; resize: none;" id="txtMensagemWa">Olá, Bruno! Notei que as métricas do seu ambiente estático EXEC0001 atingiram alta performance. Vamos avançar com o plano Premium para destravar a governança de IA em nível avançado corporativo?</textarea>
-                
-                <button id="btnDispararWa">Disparar Mensagem via WhatsApp</button>
-            </div>
+        <!-- Tabela Unificada de Alunos Ocupando a Largura Total -->
+        <div class="card">
+            <h3>👥 Alunos, Planos e Prospecção Ativa</h3>
+            <table id="tabelaAlunos">
+                <thead>
+                    <tr>
+                        <th>ID Ambiente</th>
+                        <th>Nome</th>
+                        <th>Empresa</th>
+                        <th>E-mail</th>
+                        <th>WhatsApp</th>
+                        <th>Plano Atual</th>
+                        <th>Alterar Plano</th>
+                        <th>Ações de Upgrade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: var(--texto-secundario);">Aguardando autenticação para carregar dados reais...</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
+    <!-- Rodapé Corrigido e Centralizado Estruturalmente -->
+    <div class="footer-signature">
+        <div class="slogan">"Você é o EU. Nós somos o ⁺ que soma com você."</div>
+        <p>Grupo EU⁺ &gt; EU⁺ Empresa &gt; EU⁺ Gestor &gt; Console Central</p>
+    </div>
+
     <script>
-        // URL DO SEU GOOGLE APPS SCRIPT WEB APP
+        // COLE A SUA URL DE PRODUÇÃO DO WEB APP AQUI:
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6nf5lgvSTCtX2n4kNKaQHqfJtv9QvtjJGgBMcmrtLpGybae7eLb5vlDm06bzrxgF2DA/exec";
         
-        // Armazena a senha globalmente após autenticar para usar nas requisições do cadastrarAluno
         let senhaMasterValidada = ""; 
 
         document.getElementById('btnAuthGestor').addEventListener('click', function() {
@@ -142,42 +173,112 @@
             btn.innerText = "Verificando...";
             btn.disabled = true;
 
-            // Altera para verificar na nova rota do doGet do Apps Script
             fetch(`${SCRIPT_URL}?action=validarAdmin&senha=${encodeURIComponent(pass)}`)
             .then(res => res.json())
             .then(res => {
                 if(res.autorizado) {
                     senhaMasterValidada = pass;
                     document.getElementById('authOverlay').style.display = 'none';
+                    carregarDadosIniciais();
                 } else {
                     alert(res.error || "Senha incorreta. Acesso negado.");
+                    btn.innerText = "Autenticar Admin";
+                    btn.disabled = false;
                 }
-                btn.innerText = "Autenticar Admin";
-                btn.disabled = false;
             })
             .catch(() => {
-                // FALLBACK DE SEGURANÇA: Se o script ainda não foi atualizado, aceita a senha estática clássica temporariamente
-                if(pass === "EU+ADMIN") {
-                    senhaMasterValidada = pass;
-                    document.getElementById('authOverlay').style.display = 'none';
-                } else {
-                    alert("Erro de comunicação com o servidor ou senha inválida.");
-                }
+                alert("Erro crítico de comunicação. Verifique a URL do Web App ou faça uma nova implantação.");
                 btn.innerText = "Autenticar Admin";
                 btn.disabled = false;
             });
         });
 
-        document.getElementById('btnDispararWa').addEventListener('click', function() {
-            const num = document.getElementById('selectAlunoWa').value;
-            const txt = document.getElementById('txtMensagemWa').value;
-            window.open(`https://wa.me/${num}?text=${encodeURIComponent(txt)}`, '_blank');
-        });
-    </script>
+        // Puxa as métricas e renderiza os alunos direto da Planilha
+        function carregarDadosIniciais() {
+            fetch(`${SCRIPT_URL}?action=carregarPainelGestor`)
+            .then(res => res.json())
+            .then(response => {
+                if(response.success) {
+                    const dados = response.data;
+                    
+                    // Renderiza os KPIs
+                    document.getElementById('kpiCursos').innerText = dados.kpis.totalCursos;
+                    document.getElementById('kpiUsuarios').innerText = dados.kpis.totalUsuarios;
+                    document.getElementById('kpiFree').innerText = dados.kpis.free;
+                    document.getElementById('kpiPremium').innerText = dados.kpis.premium;
+                    document.getElementById('kpiFreemium').innerText = dados.kpis.freemium;
+                    document.getElementById('kpiBasico').innerText = dados.kpis.basico;
+                    document.getElementById('kpiPersonalizado').innerText = dados.kpis.personalizado;
+                    
+                    // Renderiza a Tabela
+                    const tbody = document.querySelector('#tabelaAlunos tbody');
+                    tbody.innerHTML = "";
+                    
+                    if(dados.alunos.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center;">Nenhum registro encontrado na planilha.</td></tr>`;
+                        return;
+                    }
+                    
+                    dados.alunos.forEach(aluno => {
+                        const tr = document.createElement('tr');
+                        
+                        // Criação do Seletor Dinâmico de Modificação Manual de Planos
+                        const opcoesPlanos = ['free', 'premium', 'freemium', 'básico', 'personalizado'];
+                        let selectHtml = `<select onchange="atualizarPlanoEmTempoReal('${aluno.idAmbiente}', this.value)">`;
+                        opcoesPlanos.forEach(opt => {
+                            const selected = aluno.plano.toLowerCase() === opt ? "selected" : "";
+                            selectHtml += `<option value="${opt}" ${selected}>${opt.toUpperCase()}</option>`;
+                        });
+                        selectHtml += `</select>`;
 
-    <div class="footer-signature" style="margin-top: 40px;">
-        <div class="slogan">"Você é o EU. Nós somos o ⁺ que soma com você."</div>
-        <p>Grupo EU⁺ &gt; EU⁺ Empresa &gt; EU⁺ Gestor &gt; Console Central</p>
-    </div>
+                        // Textos pré-configurados para disparo ágil
+                        const txtWa = encodeURIComponent(`Olá, ${aluno.nome}! Analisamos o engajamento no seu ecossistema ${aluno.idAmbiente} e preparamos um upgrade estratégico exclusivo para o plano corporativo. Vamos evoluir hoje?`);
+                        const txtEmailAssunto = encodeURIComponent(`Oportunidade de Expansão de Licença - Saber⁺`);
+                        const txtEmailCorpo = encodeURIComponent(`Olá, ${aluno.nome}.\n\nGostaríamos de apresentar os novos módulos premium disponíveis para o ambiente corporativo da ${aluno.empresa}.\n\nPodemos agendar um alinhamento estratégico esta semana?`);
+
+                        tr.innerHTML = `
+                            <td style="font-weight: bold; color: var(--dourado-secundario);">${aluno.idAmbiente}</td>
+                            <td>${aluno.nome}</td>
+                            <td>${aluno.empresa || '—'}</td>
+                            <td>${aluno.email}</td>
+                            <td>${aluno.whatsapp || '—'}</td>
+                            <td><span style="color: #25D366; font-weight: 500;">${aluno.plano.toUpperCase()}</span></td>
+                            <td>${selectHtml}</td>
+                            <td>
+                                <button class="btn-acao" onclick="window.open('https://wa.me/${aluno.whatsapp}?text=${txtWa}', '_blank')">💬 WhatsApp</button>
+                                <button class="btn-acao" onclick="window.open('mailto:${aluno.email}?subject=${txtEmailAssunto}&body=${txtEmailCorpo}', '_blank')">✉️ E-mail</button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            });
+        }
+
+        // Realiza a alteração do plano na planilha imediatamente ao alterar o combo select
+        function atualizarPlanoEmTempoReal(idAmbiente, novoPlano) {
+            const payloads = {
+                action: "alterarPlanoManual",
+                senhaMaster: senhaMasterValidada,
+                idAmbiente: idAmbiente,
+                novoPlano: novoPlano
+            };
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify(payloads)
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) {
+                    alert(`Sucesso: Ambiente ${idAmbiente} alterado para ${novoPlano.toUpperCase()} direto na Planilha.`);
+                    carregarDadosIniciais(); // Recarrega para atualizar os blocos de KPI lá em cima
+                } else {
+                    alert("Erro ao salvar alteração: " + res.error);
+                }
+            })
+            .catch(() => alert("Falha na requisição de alteração."));
+        }
+    </script>
 </body>
 </html>
