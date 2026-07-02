@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro - EU⁺ Saber</title>
+    <title>Cadastro - Saber⁺</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;700&display=swap');
 
         :root {
             --fundo-principal: #060E18;
@@ -29,6 +29,33 @@
         }
 
         h2, h4 { font-family: 'Cormorant Garamond', serif; color: var(--dourado-principal); }
+
+        /* Logo Saber+ Coerente com a Home */
+        .logo-container { text-align: center; margin-bottom: 24px; }
+        .logo-saber {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 400;
+            font-size: 42px;
+            color: #FFFFFF;
+            line-height: 1;
+            display: inline-block;
+        }
+        .logo-saber span {
+            color: var(--dourado-principal);
+            font-weight: 300;
+            vertical-align: super;
+            font-size: 28px;
+            margin-left: 2px;
+        }
+        .eu-executivo-tag {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--texto-secundario);
+            text-transform: uppercase;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+        }
 
         input, select {
             background-color: var(--fundo-terciario);
@@ -68,47 +95,49 @@
         button:hover, .btn:hover { background-color: var(--dourado-principal); color: var(--fundo-principal); }
         .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
         
-        .form-container { max-width: 550px; margin: 40px auto; background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 32px; border-radius: 4px; }
-        .form-header { text-align: center; margin-bottom: 32px; }
+        .form-container { max-width: 550px; margin: 20px auto; background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 32px; border-radius: 4px; }
         .form-group-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
         .footer-signature { text-align: center; padding: 40px 20px; border-top: 1px solid var(--bordas); color: var(--texto-secundario); font-size: 12px; margin-top: 60px; }
         .slogan { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: var(--dourado-secundario); margin-bottom: 8px; }
-        .footer-signature a { color: var(--dourado-principal); text-decoration: none; margin: 0 10px; }
+        .footer-signature a { color: var(--texto-principal); text-decoration: none; margin: 0 10px; }
+        .footer-signature a:hover { color: var(--dourado-principal); }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="form-container">
-            <div class="form-header">
-                <h2>Faça seu Cadastro no EU⁺ Saber</h2>
-                <p style="color: var(--texto-secundario); font-size: 14px;">Preencha seus dados para criar seu ambiente estático de estudos</p>
+            <div class="logo-container">
+                <span class="eu-executivo-tag">EU⁺ Executivo</span>
+                <div class="logo-saber">Saber<span>+</span></div>
+                <p style="color: var(--texto-secundario); font-size: 14px; margin-top: 8px;">Instancie o seu ecossistema híbrido de aprendizagem</p>
             </div>
             
             <form id="formCadastro">
                 <label>Nome Completo</label>
                 <input type="text" id="nome" placeholder="Ex: Bruno Vieira" required>
                 
-                <label>E-mail Corporativo (Será seu Usuário)</label>
+                <label>E-mail Corporativo (Seu Usuário)</label>
                 <input type="email" id="email" placeholder="Ex: nome@empresa.com" required>
                 
                 <label>WhatsApp</label>
-                <input type="tel" id="whatsapp" placeholder="Ex: 27999999999" required>
+                <input type="tel" id="whatsapp" placeholder="Ex: 27997161826" required>
                 
                 <div class="form-group-row">
                     <div>
                         <label>Cargo</label>
-                        <input type="text" id="cargo" placeholder="Ex: Diretor Comercial" required>
+                        <input type="text" id="cargo" placeholder="Ex: Diretor" required>
                     </div>
                     <div>
                         <label>Empresa</label>
-                        <input type="text" id="empresa" placeholder="Ex: GPA" required>
+                        <input type="text" id="empresa" placeholder="Ex: Grupo Coutinho" required>
                     </div>
                 </div>
 
                 <label>Escolha seu Plano Inicial</label>
                 <select id="plano">
                     <option value="free">EU⁺ Free (Ambiente de Testes)</option>
+                    <option value="freemium">EU⁺ Freemium (7 dias grátis)</option>
                     <option value="básico">EU⁺ Básico</option>
                     <option value="premium">EU⁺ Premium</option>
                     <option value="personalizado">EU⁺ Personalizado</option>
@@ -118,47 +147,45 @@
             </form>
 
             <div id="resultadoCadastro" style="margin-top: 24px; display: none; padding: 16px; background: rgba(196,151,74,0.1); border: 1px solid var(--dourado-principal); border-radius: 4px;">
-                <h4 style="margin-bottom: 8px;">✨ Cadastro Efetuado com Sucesso!</h4>
-                <p style="font-size: 14px; margin-bottom: 12px;">Seus dados de acesso foram processados e enviados para a Planilha Master.</p>
-                <p style="font-size: 14px;"><strong>Seu ID de Ambiente:</strong> <span id="resAmbiente" style="color: var(--dourado-secundario);"></span></p>
-                <p style="font-size: 14px; margin-bottom: 16px;"><strong>Sua Senha Gerada:</strong> <span id="resSenha" style="color: var(--dourado-secundario);"></span></p>
-                <a id="btnWhatsAppLink" href="#" target="_blank" class="btn" style="width: 100%; background-color: #25D366; border-color: #25D366; color: #fff;">Enviar Acesso via WhatsApp Obrigatoriamente</a>
+                <h4 style="margin-bottom: 8px;">✨ Arquitetura Concluída!</h4>
+                <p style="font-size: 14px; margin-bottom: 12px;">As suas credenciais foram salvas no Painel Gestor e disparadas para o seu e-mail corporativo.</p>
+                <p style="font-size: 14px;"><strong>Seu ID de Ambiente:</strong> <span id="resAmbiente" style="color: var(--dourado-secundario); font-weight: bold;"></span></p>
+                <p style="font-size: 14px; margin-bottom: 16px;"><strong>Sua Senha Provisória:</strong> <span id="resSenha" style="color: var(--dourado-secundario); font-weight: bold;"></span></p>
+                <a id="btnWhatsAppLink" href="#" target="_blank" class="btn" style="width: 100%; background-color: #25D366; border-color: #25D366; color: #fff; font-weight: bold;">Enviar Acesso via WhatsApp Obrigatoriamente</a>
             </div>
         </div>
     </div>
 
     <script>
+        // URL da sua API do Google Apps Script
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6nf5lgvSTCtX2n4kNKaQHqfJtv9QvtjJGgBMcmrtLpGybae7eLb5vlDm06bzrxgF2DA/exec";
 
         document.getElementById('formCadastro').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnCadastrar');
-            btn.innerText = "Processando Arquitetura...";
+            btn.innerText = "Processando Arquitetura de Dados...";
             btn.disabled = true;
 
+            // Gera o ID sequencial no padrão solicitado
             const randomId = "EXEC" + Math.floor(1000 + Math.random() * 9000);
             const generatedPassword = Math.random().toString(36).slice(-8).toUpperCase();
 
+            // Ação específica para Criação de Aluno no Painel Gestor
             const payload = {
-                action: "salvarAnotacao",
+                action: "cadastrarAluno",
                 idAmbiente: randomId,
-                idCurso: "CADASTRO_NOVO_ALUNO",
-                idAula: "DADOS",
-                texto: JSON.stringify({
-                    nome: document.getElementById('nome').value,
-                    email: document.getElementById('email').value,
-                    whatsapp: document.getElementById('whatsapp').value,
-                    cargo: document.getElementById('cargo').value,
-                    empresa: document.getElementById('empresa').value,
-                    plano: document.getElementById('plano').value,
-                    senha: generatedPassword,
-                    status: "Ativo"
-                })
+                nome: document.getElementById('nome').value,
+                email: document.getElementById('email').value,
+                whatsapp: document.getElementById('whatsapp').value,
+                cargo: document.getElementById('cargo').value,
+                empresa: document.getElementById('empresa').value,
+                plano: document.getElementById('plano').value,
+                senha: generatedPassword
             };
 
             fetch(SCRIPT_URL, {
                 method: "POST",
-                mode: "no-cors",
+                mode: "no-cors", 
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             }).then(() => {
@@ -168,10 +195,10 @@
                 document.getElementById('resAmbiente').innerText = randomId;
                 document.getElementById('resSenha').innerText = generatedPassword;
 
-                const textWa = `Olá! Seu cadastro no ecossistema EU⁺ Saber foi concluído com sucesso.\n\nUsuário: ${document.getElementById('email').value}\nSenha: ${generatedPassword}\nID Ambiente: ${randomId}\n\nAcesse seu painel executivo aqui: https://eumaisempresa.github.io/sabermais/painel.html`;
-                document.getElementById('btnWhatsAppLink').href = `https://wa.me/${document.getElementById('whatsapp').value}?text=${encodeURIComponent(textWa)}`;
+                const textWa = `Olá! Seu cadastro no ecossistema Saber⁺ da alta liderança foi concluído.\n\nUsuário: ${payload.email}\nSenha: ${generatedPassword}\nID Ambiente: ${randomId}\n\nSeu acesso foi enviado para o e-mail fornecido.\nAcesse o painel aqui: https://eumaisempresa.github.io/sabermais/painel/`;
+                document.getElementById('btnWhatsAppLink').href = `https://wa.me/${payload.whatsapp}?text=${encodeURIComponent(textWa)}`;
             }).catch(err => {
-                alert("Erro ao conectar ao Script do Google.");
+                alert("Erro na conexão com o servidor. Verifique os logs.");
                 btn.disabled = false;
                 btn.innerText = "Confirmar Cadastro e Gerar Acesso";
             });
@@ -180,9 +207,10 @@
 
     <div class="footer-signature">
         <div class="slogan">"Você é o EU. Nós somos o ⁺ que soma com você."</div>
-        <p>Grupo EU⁺ &gt; EU⁺ Empresa &gt; EU⁺ Saber &gt; Cadastro</p>
-        <div style="margin-top: 15px;">
-            <a href="index.html">Home</a> | <a href="cadastro.html">Cadastro</a> | <a href="painel.html">Painel</a> | <a href="gestor.html">Gestor</a>
+        <div style="margin-bottom: 15px;">
+            <a href="https://eumaisempresa.com.br/" target="_blank">Grupo EU⁺</a> | 
+            <a href="https://eumaisempresa.com.br/plataformas/" target="_blank">EU⁺ Empresa</a> | 
+            <a href="https://eumaisempresa.com.br/plataformas/#executivo" target="_blank">EU⁺ Executivo</a>
         </div>
     </div>
 </body>
