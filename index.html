@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saber⁺  - Inteligência e Liderança Corporativa</title>
+    <title>Saber⁺ - EU⁺ Executivo</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;700&display=swap');
 
         :root {
             --fundo-principal: #060E18;
@@ -34,11 +34,39 @@
             color: var(--dourado-principal);
         }
 
+        .eu-executivo-tag {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.2em;
+            color: var(--texto-secundario);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        /* Estilização baseada na imagem image_954049.png */
+        .logo-saber {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 400;
+            font-size: 64px;
+            color: #FFFFFF;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+        .logo-saber span {
+            color: var(--dourado-principal);
+            font-weight: 300;
+            vertical-align: super;
+            font-size: 45px;
+            margin-left: 2px;
+        }
+
         button, .btn {
             background-color: transparent;
             border: 1px solid var(--dourado-principal);
             color: var(--dourado-principal);
-            padding: 12px 24px;
+            padding: 14px 32px;
             font-family: 'DM Sans', sans-serif;
             font-weight: 500;
             letter-spacing: 0.05em;
@@ -57,7 +85,7 @@
             color: var(--fundo-principal);
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 60px 20px; }
 
         .card {
             background-color: var(--fundo-secundario);
@@ -69,69 +97,254 @@
 
         .hero {
             text-align: center;
-            padding: 100px 20px;
+            padding: 120px 20px;
             background: radial-gradient(circle at center, var(--fundo-secundario) 0%, var(--fundo-principal) 100%);
             border-bottom: 1px solid var(--bordas);
         }
-        .hero h1 { font-size: 54px; margin-bottom: 16px; font-weight: 400; }
-        .hero p { font-size: 18px; color: var(--texto-secundario); max-width: 600px; margin: 0 auto 32px auto; }
+        .hero p { font-size: 22px; color: var(--texto-secundario); max-width: 600px; margin: 0 auto 36px auto; font-family: 'Cormorant Garamond', serif; font-style: italic;}
         
-        .grid-frentes {
+        .grid-features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
             margin-top: 40px;
         }
-        .frente-card { border-left: 3px solid var(--dourado-principal); }
+        .feature-card { border-top: 2px solid var(--dourado-principal); }
+        .feature-card h3 { margin-bottom: 12px; font-size: 22px; }
+
+        /* Estilização da Grade do Curso */
+        .modulo-item {
+            padding: 16px;
+            background-color: var(--fundo-terciario);
+            border-left: 3px solid var(--dourado-principal);
+            margin-bottom: 12px;
+            border-radius: 0 4px 4px 0;
+        }
+        .modulo-item strong { color: var(--dourado-secundario); display: block; font-size: 12px; text-transform: uppercase; margin-bottom: 4px; font-family: 'DM Sans', sans-serif; }
+
+        /* Estilização da Tabela de Planos */
+        .planos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .plano-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+            position: relative;
+        }
+        .plano-card.destaque {
+            border-color: var(--dourado-principal);
+            box-shadow: 0 4px 20px rgba(196, 151, 74, 0.1);
+        }
+        .plano-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--dourado-principal);
+            color: var(--fundo-principal);
+            padding: 2px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 12px;
+        }
+        .plano-preco {
+            font-size: 28px;
+            color: #FFF;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+        .plano-promo {
+            font-size: 13px;
+            color: var(--dourado-secundario);
+            background: rgba(196, 151, 74, 0.08);
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
 
         .footer-signature {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
             border-top: 1px solid var(--bordas);
             color: var(--texto-secundario);
-            font-size: 12px;
+            font-size: 13px;
             letter-spacing: 0.05em;
             margin-top: 60px;
         }
-        .footer-signature a { color: var(--dourado-principal); text-decoration: none; margin: 0 10px; }
-        .slogan { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: var(--dourado-secundario); margin-bottom: 8px; }
+        .footer-signature a { color: var(--texto-principal); text-decoration: none; margin: 0 12px; transition: color 0.2s; }
+        .footer-signature a:hover { color: var(--dourado-principal); }
+        .slogan { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; color: var(--dourado-secundario); margin-bottom: 12px; }
     </style>
 </head>
 <body>
+
+    <!-- HERO SECTION -->
     <div class="hero">
-        <h1>EU⁺ Saber</h1>
-        <p>Desenvolvimento cognitivo e tecnológico para a alta liderança. Transforme intuição lógica em resultados exponenciais de mercado.</p>
-        <a href="cadastro" class="btn">Iniciar Jornada</a>
-        <a href="painel" class="btn" style="margin-left: 15px; border-color: var(--texto-secundario); color: var(--texto-secundario);">Acessar Painel</a>
+        <span class="eu-executivo-tag">EU⁺ Executivo</span>
+        <div class="logo-saber">Saber<span>+</span></div>
+        <p>"Seu Ambiente de ensino e aprendizado"</p>
+        <a href="https://eumaisempresa.github.io/sabermais/cadastro/" class="btn">Cadastre-se</a>
     </div>
 
     <div class="container">
-        <h2 style="text-align: center; font-size: 32px; margin-bottom: 40px;">Nossas Frentes de Desenvolvimento</h2>
-        <div class="grid-frentes">
-            <div class="card frente-card">
-                <h3>EU⁺ Executivo</h3>
-                <p style="color: var(--texto-secundario); margin: 12px 0;">"Estrutura para quem lidera."</p>
-                <p>Formação de alta governança, arquitetura de sistemas híbridos de IA e controle de custos operacionais críticos de tecnologia.</p>
+        
+        <!-- SEÇÃO: AMBIENTE DE INTELIGÊNCIA DE NEGÓCIOS -->
+        <section style="margin-bottom: 80px;">
+            <h2 style="text-align: center; font-size: 36px; margin-bottom: 12px;">Em nosso Ambiente de Inteligência de Negócios⁺ você irá:</h2>
+            <p style="text-align: center; color: var(--texto-secundario); max-width: 700px; margin: 0 auto 40px auto;">Descobrir uma plataforma cirurgicamente desenhada para mitigar o ruído analítico e acelerar a absorção de estratégias corporativas complexas.</p>
+            
+            <div class="grid-features">
+                <div class="card feature-card">
+                    <h3>Painel de Anotações</h3>
+                    <p style="color: var(--texto-secundario); font-size: 15px;">Registre insights executivos em tempo real ao lado dos seus estudos. Todas as suas anotações são salvas e sincronizadas automaticamente com a nuvem do ecossistema.</p>
+                </div>
+                <div class="card feature-card">
+                    <h3>Facilidade de Leitura</h3>
+                    <p style="color: var(--texto-secundario); font-size: 15px;">Interface limpa com tipografia premium de alto contraste. Arquitetada especificamente para evitar a fadiga cognitiva durante análises profundas.</p>
+                </div>
+                <div class="card feature-card">
+                    <h3>Curso Rápido</h3>
+                    <p style="color: var(--texto-secundario); font-size: 15px;">Trilhas modulares diretas ao ponto. Sem enrolação, focadas na aplicação imediata de governança e lógica tecnológica no mercado atual.</p>
+                </div>
+                <div class="card feature-card">
+                    <h3>Infraestrutura Ágil</h3>
+                    <p style="color: var(--texto-secundario); font-size: 15px;">Ambiente de carregamento estático e instantâneo. Conexão direta via API que injeta novos conteúdos e manuais corporativos sem burocracia.</p>
+                </div>
             </div>
-            <div class="card frente-card" style="border-left-color: #C4A265;">
-                <h3>EU⁺ Negócio</h3>
-                <p style="color: var(--texto-secundario); margin: 12px 0;">"Mais controle. Mais clareza. Mais gestão."</p>
-                <p>Modelos preditivos, eficiência na esteira de dados e redução radical no desperdício de tokens operacionais.</p>
+        </section>
+
+        <!-- SEÇÃO: PRIMEIRO CURSO -->
+        <section style="margin-bottom: 80px; background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 40px; border-radius: 4px;">
+            <div style="text-align: center; margin-bottom: 32px;">
+                <span style="color: var(--dourado-principal); font-size: 12px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase;">Lançamento Exclusivo</span>
+                <h2 style="font-size: 38px; margin-top: 5px;">Curso: EU⁺ a Inteligência Artificial</h2>
             </div>
-            <div class="card frente-card" style="border-left-color: #4A9BC4;">
-                <h3>EU⁺ Vida</h3>
-                <p style="color: var(--texto-secundario); margin: 12px 0;">"Organize sua vida antes que a vida organize você."</p>
-                <p>Gestão de tempo, foco estratégico e eliminação proativa de ruído cognitivo no dia a dia da alta liderança.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                <div class="modulo-item">
+                    <strong>Módulo 1</strong>
+                    PARTE 1: Fundamentos Conceituais da Inteligência Artificial
+                </div>
+                <div class="modulo-item">
+                    <strong>Módulo 2</strong>
+                    PARTE 2: Engenharia de Contexto e Ativação de Agentes
+                </div>
+                <div class="modulo-item">
+                    <strong>Módulo 3</strong>
+                    PARTE 3: Injeção de Contexto e Modelagem de Personalidade I
+                </div>
+                <div class="modulo-item">
+                    <strong>Módulo 4</strong>
+                    PARTE 4: Injeção de Contexto e Modelagem de Personalidade II
+                </div>
+                <div class="modulo-item">
+                    <strong>Módulo 5</strong>
+                    PARTE 5: Criando Agentes e Motores Personalizados para o usuário Comum
+                </div>
+                <div class="modulo-item">
+                    <strong>Módulo 6</strong>
+                    PARTE 6: Engenharia Avançada, Controle sem Código e Variáveis de Contexto
+                </div>
+                <div class="modulo-item">
+                    <strong>Módulo 7</strong>
+                    PARTE 7: Projeto Prático Final. Colocando Páginas no ar em 10 minutos com a Inteligência Artificial.
+                </div>
             </div>
-        </div>
+        </section>
+
+        <!-- SEÇÃO: PLANOS DE ACESSO -->
+        <section id="planos">
+            <h2 style="text-align: center; font-size: 36px; margin-bottom: 40px;">Planos e Investimento</h2>
+            
+            <div class="planos-grid">
+                <!-- PLANO FREE -->
+                <div class="card plano-card">
+                    <div>
+                        <h3>EU⁺ Free</h3>
+                        <p style="color: var(--texto-secundario); font-size: 13px; margin-top: 4px;">Ambiente de Testes</p>
+                        <div class="plano-preco">R$ 0</div>
+                        <p style="color: var(--texto-secundario); font-size: 14px;">Cadastre-se e comece a ler nossos estudos.</p>
+                    </div>
+                    <a href="https://eumaisempresa.github.io/sabermais/cadastro/" class="btn" style="margin-top: 24px; width: 100%;">Iniciar Grátis</a>
+                </div>
+
+                <!-- PLANO FREEMIUM -->
+                <div class="card plano-card destaque">
+                    <div class="plano-badge">Degustação</div>
+                    <div>
+                        <h3>EU⁺ Freemium</h3>
+                        <p style="color: var(--texto-secundario); font-size: 13px; margin-top: 4px;">Experiência Completa</p>
+                        <div class="plano-preco">Grátis <span style="font-size: 14px; color: var(--texto-secundario);">/ 7 dias</span></div>
+                        <p style="color: var(--texto-secundario); font-size: 14px;">7 dias de acesso total ao plano Premium. Limite de 1 uso por cadastro.</p>
+                    </div>
+                    <a href="https://eumaisempresa.github.io/sabermais/cadastro/" class="btn" style="margin-top: 24px; width: 100%; background-color: var(--dourado-principal); color: var(--fundo-principal);">Experimentar</a>
+                </div>
+
+                <!-- PLANO BÁSICO -->
+                <div class="card plano-card">
+                    <div>
+                        <h3>EU⁺ Básico</h3>
+                        <p style="color: var(--texto-secundario); font-size: 13px; margin-top: 4px;">Consumo Regular</p>
+                        <div class="plano-preco">R$ 39,90<span style="font-size: 14px; color: var(--texto-secundario);"> / mês</span></div>
+                        <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 12px;">Dá direito a 1 estudo aprofundado por mês.</p>
+                        <div class="plano-promo">
+                            <strong>Oferta de Lançamento:</strong><br>Adquirindo 6 meses, sai por apenas R$ 59,40 (R$ 9,90 por mês).
+                        </div>
+                    </div>
+                    <a href="https://eumaisempresa.github.io/sabermais/cadastro/" class="btn" style="margin-top: 24px; width: 100%;">Assinar Básico</a>
+                </div>
+
+                <!-- PLANO PREMIUM -->
+                <div class="card plano-card">
+                    <div>
+                        <h3>EU⁺ Premium</h3>
+                        <p style="color: var(--texto-secundario); font-size: 13px; margin-top: 4px;">Foco Exponencial</p>
+                        <div class="plano-preco">R$ 99,90<span style="font-size: 14px; color: var(--texto-secundario);"> / mês</span></div>
+                        <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 12px;">Acesso a estudos e análises ilimitadas.</p>
+                        <div class="plano-promo">
+                            <strong>Oferta de Lançamento:</strong><br>Adquirindo 6 meses, sai por apenas R$ 239,40 (R$ 39,90 por mês).
+                        </div>
+                    </div>
+                    <a href="https://eumaisempresa.github.io/sabermais/cadastro/" class="btn" style="margin-top: 24px; width: 100%;">Assinar Premium</a>
+                </div>
+
+                <!-- PLANO PERSONALIZADO -->
+                <div class="card plano-card">
+                    <div>
+                        <h3>EU⁺ Personalizado</h3>
+                        <p style="color: var(--texto-secundario); font-size: 13px; margin-top: 4px;">Enterprise</p>
+                        <div class="plano-preco" style="font-size: 24px;">Sob Consulta</div>
+                        <p style="color: var(--texto-secundario); font-size: 14px;">Soluções customizadas para empresas, corporações e grupos de alta liderança.</p>
+                    </div>
+                    <a href="https://eumaisempresa.github.io/sabermais/cadastro/" class="btn" style="margin-top: 24px; width: 100%;">Contatar Consultoria</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO FINAL: REDIRECIONAMENTO DE AMBIENTE -->
+        <section style="margin-top: 80px; text-align: center; padding: 40px; border: 1px dashed var(--bordas); border-radius: 4px;">
+            <h3 style="font-size: 24px; margin-bottom: 12px;">Já possui credenciais de acesso?</h3>
+            <p style="color: var(--texto-secundario); margin-bottom: 24px; font-size: 14px;">Conecte sua chave de ambiente estático e retome de onde parou.</p>
+            <a href="https://eumaisempresa.github.io/sabermais/painel/" class="btn" style="border-color: var(--texto-secundario); color: var(--texto-principal);">Acessar Meu Painel</a>
+        </section>
+
     </div>
 
+    <!-- RODAPÉ ATUALIZADO E CORRIGIDO -->
     <div class="footer-signature">
         <div class="slogan">"Você é o EU. Nós somos o ⁺ que soma com você."</div>
-        <p>Grupo EU⁺ &gt; EU⁺ Empresa &gt; EU⁺ Saber &gt; Home</p>
-        <div style="margin-top: 15px;">
-            <a href="index.html">Home</a> | <a href="cadastro.html">Cadastro</a> | <a href="painel.html">Painel</a> | <a href="gestor.html">Gestor</a>
+        <div style="margin-bottom: 20px;">
+            <a href="https://eumaisempresa.com.br/" target="_blank">Grupo EU⁺</a> | 
+            <a href="https://eumaisempresa.com.br/plataformas/" target="_blank">EU⁺ Empresa</a> | 
+            <a href="https://eumaisempresa.com.br/plataformas/#executivo" target="_blank">EU⁺ Executivo</a>
         </div>
+        <p>Copyright © Ecossistema EU⁺. Todos os direitos reservados.</p>
     </div>
 </body>
 </html>
