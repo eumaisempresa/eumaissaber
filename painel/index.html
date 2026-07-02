@@ -26,6 +26,7 @@
             font-family: 'DM Sans', sans-serif;
             font-weight: 300;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .brand-title, #aulaTitulo, h2, h3 { font-family: 'Cormorant Garamond', serif; color: var(--dourado-principal); }
@@ -37,8 +38,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
         }
 
         .header-actions {
@@ -54,6 +54,7 @@
             padding: 10px;
             border-radius: 4px;
             font-family: 'DM Sans', sans-serif;
+            width: 280px;
         }
 
         button, .btn-upgrade-global {
@@ -69,24 +70,20 @@
             text-decoration: none;
             display: inline-block;
             font-weight: 500;
+            text-align: center;
         }
         button:hover, .btn-upgrade-global:hover { background-color: var(--dourado-principal); color: var(--fundo-principal); }
 
-        /* Estilo do botão de upgrade global em destaque */
         .btn-upgrade-global {
             background-color: var(--dourado-principal);
             color: var(--fundo-principal);
             border-color: var(--dourado-principal);
         }
-        .btn-upgrade-global:hover {
-            background-color: transparent;
-            color: var(--dourado-principal);
-        }
 
         .painel-wrapper {
             display: grid;
             grid-template-columns: 280px 1fr 320px;
-            height: calc(100vh - 70px);
+            height: calc(100vh - 72px);
         }
 
         .sidebar { background-color: var(--fundo-secundario); border-right: 1px solid var(--bordas); padding: 20px; overflow-y: auto; }
@@ -105,6 +102,7 @@
             display: flex; 
             flex-direction: column; 
             align-items: center;
+            overflow-y: auto;
         }
 
         .aula-item {
@@ -116,7 +114,6 @@
         
         .aula-item.bloqueado {
             opacity: 0.5;
-            cursor: not-allowed;
             background: rgba(0,0,0,0.15) !important;
         }
         
@@ -125,6 +122,13 @@
             color: #E74C3C; 
             text-transform: uppercase; 
             font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .concluida-badge {
+            color: #2ECC71;
+            font-weight: bold;
+            font-size: 14px;
         }
 
        .folha-caderno {
@@ -142,7 +146,35 @@
             background-image: linear-gradient(rgba(196, 209, 223, 0.35) 1px, transparent 1px);
             background-size: 100% 28px;
             line-height: 28px;
-            display: inline-block;
+            display: block;
+        }
+
+        .meta-leitura {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(0,0,0,0.1);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #556373;
+            font-weight: 400;
+        }
+
+        .btn-concluir {
+            background: #EAEFF4;
+            border: 1px solid #CBD5E1;
+            color: #475569;
+            padding: 4px 10px;
+            font-size: 11px;
+            border-radius: 3px;
+            cursor: pointer;
+            text-transform: none;
+        }
+        .btn-concluir.active {
+            background: #2ECC71;
+            color: white;
+            border-color: #2ECC71;
         }
         
         .conteudo-aula-dinamico {
@@ -197,12 +229,11 @@
         .status-save { font-size: 11px; color: var(--texto-secundario); text-align: right; margin-top: 5px; }
 
         #loginOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background-color: var(--fundo-principal); display: flex; justify-content: center; align-items: center; z-index: 9999; }
-        .card { background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 32px; border-radius: 4px; width: 400px; }
+        .card { background-color: var(--fundo-secundario); border: 1px solid var(--bordas); padding: 32px; border-radius: 4px; width: 100%; max-width: 400px; margin: 15px; }
         .login-input { width: 100%; padding: 12px; background: var(--fundo-terciario); border: 1px solid var(--bordas); color: #fff; margin-bottom: 16px; border-radius: 4px; font-family: 'DM Sans', sans-serif; }
         .link-recuperar { font-size: 12px; color: var(--texto-secundario); cursor: pointer; text-decoration: underline; margin-top: 12px; display: inline-block; }
         .link-recuperar:hover { color: var(--dourado-principal); }
 
-        /* Botão flutuante mobile (escondido por padrão no PC) */
         .floating-note-btn {
             display: none;
             position: fixed;
@@ -216,27 +247,52 @@
             justify-content: center;
             align-items: center;
             font-size: 24px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            z-index: 999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            z-index: 995;
             border: none;
             cursor: pointer;
         }
 
-        /* RESPONSIVIDADE MOBILE COMPLETA */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            z-index: 996;
+        }
+
+        /* Modal Customizado de Estímulo para Conta Free */
+        .modal-upgrade {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--fundo-secundario);
+            border: 1px solid var(--dourado-principal);
+            padding: 30px;
+            border-radius: 6px;
+            z-index: 1000;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+        .modal-upgrade.open { display: block; }
+
         @media screen and (max-width: 900px) {
             header {
                 flex-direction: column;
-                align-items: stretch;
+                align-items: center;
                 padding: 15px;
                 text-align: center;
             }
             .header-actions {
                 flex-direction: column;
                 width: 100%;
+                gap: 10px;
             }
             select, .btn-upgrade-global {
                 width: 100%;
-                text-align: center;
             }
 
             .painel-wrapper {
@@ -245,7 +301,7 @@
             }
 
             .sidebar {
-                max-height: 250px;
+                max-height: 280px;
                 border-right: none;
                 border-bottom: 1px solid var(--bordas);
             }
@@ -256,11 +312,12 @@
 
             .folha-caderno {
                 padding: 30px 15px 30px 25px;
+                background-size: 100% 24px;
+                line-height: 24px;
             }
 
-            /* Transforma o painel lateral de notas em um Modal Pop-up no Celular */
             .notes-panel {
-                display: none; /* Controlado via JS */
+                display: none; 
                 position: fixed;
                 top: 50%;
                 left: 50%;
@@ -268,11 +325,11 @@
                 width: 90%;
                 max-width: 340px;
                 background-color: var(--fundo-secundario);
-                border: 2px solid var(--dourado-principal);
-                border-radius: 8px;
+                border: 1px solid var(--dourado-principal);
+                border-radius: 6px;
                 padding: 20px;
-                z-index: 1000;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+                z-index: 997;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             }
 
             .notes-panel.open {
@@ -283,15 +340,9 @@
                 display: flex;
             }
 
-            /* Overlay escuro de fundo para quando abrir a nota no celular */
-            .modal-backdrop {
-                display: none;
-                position: fixed;
-                top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0,0,0,0.7);
-                z-index: 998;
+            .modal-backdrop.open {
+                display: block;
             }
-            .modal-backdrop.open { display: block; }
         }
     </style>
 </head>
@@ -316,6 +367,15 @@
         </div>
     </div>
 
+    <!-- Modal de Upgrade para Contas Limitadas -->
+    <div class="modal-backdrop" id="upgradeBackdrop" onclick="fecharModalUpgrade()"></div>
+    <div class="modal-upgrade" id="modalUpgrade">
+        <h2 style="margin-bottom: 10px;">Conteúdo Exclusivo 👑</h2>
+        <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 20px;">Esta aula faz parte do plano corporativo completo. Faça o upgrade agora para destravar todos os módulos estratégicos sem restrições.</p>
+        <button onclick="window.open(URL_ASAAS_UPGRADE, '_blank')" style="width:100%; padding:12px; background: var(--dourado-principal); color: var(--fundo-principal);">Desbloquear Agora</button>
+        <span class="link-recuperar" style="margin-top: 15px;" onclick="fecharModalUpgrade()">Continuar lendo o material gratuito</span>
+    </div>
+
     <header>
         <div style="font-size: 24px; font-weight: bold;" class="brand-title">EU⁺ Saber</div>
         <div class="header-actions">
@@ -332,7 +392,14 @@
         
         <div class="content-body">
             <div class="folha-caderno">
-                <div id="aulaTitulo" style="margin-bottom: 20px; font-size: 28px; line-height: 34px;">Selecione uma aula ao lado para iniciar</div>
+                <div id="aulaTitulo" style="margin-bottom: 5px; font-size: 28px; line-height: 34px;">Selecione uma aula ao lado para iniciar</div>
+                
+                <!-- Barra de Metadados (Tempo estimado e Conclusão) -->
+                <div class="meta-leitura" id="metaLeitura" style="display: none;">
+                    <span id="tempoEstimado">⏱️ Leitura: -- min</span>
+                    <button class="btn-concluir" id="btnMarcarConcluido" onclick="toggleConclusaoAula()">✓ Marcar Concluído</button>
+                </div>
+
                 <div id="aulaConteudo" class="conteudo-aula-dinamico">
                     Por favor, escolha o módulo liberado no menu à esquerda para renderizar a injeção de contexto estruturada do seu manual de estudos.
                 </div>
@@ -351,11 +418,11 @@
                 <div class="status-save" id="statusSalvar">✨ Conectado à Nuvem</div>
             </div>
             <button id="btnSalvarNota" style="margin-top: 25px; width: 100%; max-width: 280px;">Sincronizar Agora</button>
-            <button id="btnFecharNotaMobile" style="margin-top: 10px; width: 100%; max-width: 280px; display: none; border-color: #E74C3C; color: #E74C3C;" onclick="toggleMobileNote()">Fechar Bloco</button>
+            <button id="btnFecharNotaMobile" style="margin-top: 10px; width: 100%; max-width: 280px; display: none; border-color: #E74C3C; color: #E74C3C;" onclick="toggleMobileNote()">Fechar e Ler</button>
         </div>
     </div>
 
-    <button class="floating-note-btn" onclick="toggleMobileNote()">✍️</button>
+    <button class="floating-note-btn" id="fabBtn" onclick="toggleMobileNote()">✍️</button>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6nf5lgvSTCtX2n4kNKaQHqfJtv9QvtjJGgBMcmrtLpGybae7eLb5vlDm06bzrxgF2DA/exec";
@@ -368,17 +435,32 @@
         let currentAulaId = "";
         let saveTimeout;
 
-        // Gerencia abertura e fechamento do bloco de notas no celular
         function toggleMobileNote() {
             if (window.innerWidth <= 900) {
                 const panel = document.getElementById('notesPanel');
                 const backdrop = document.getElementById('noteBackdrop');
                 const btnFechar = document.getElementById('btnFecharNotaMobile');
                 
-                panel.classList.toggle('open');
-                backdrop.classList.toggle('open');
-                btnFechar.style.display = panel.classList.contains('open') ? 'block' : 'none';
+                if(panel.classList.contains('open')) {
+                    panel.classList.remove('open');
+                    backdrop.classList.remove('open');
+                    btnFechar.style.display = 'none';
+                } else {
+                    panel.classList.add('open');
+                    backdrop.classList.add('open');
+                    btnFechar.style.display = 'block';
+                }
             }
+        }
+
+        function abrirModalUpgrade() {
+            document.getElementById('modalUpgrade').classList.add('open');
+            document.getElementById('upgradeBackdrop').classList.add('open');
+        }
+
+        function fecharModalUpgrade() {
+            document.getElementById('modalUpgrade').classList.remove('open');
+            document.getElementById('upgradeBackdrop').classList.remove('open');
         }
 
         function alternarTelas(mostrarRecuperar) {
@@ -430,7 +512,6 @@
                     document.getElementById('lblAmbiente').innerText = `(${res.idAmbiente})`;
                     document.getElementById('loginOverlay').style.display = 'none';
 
-                    // Oculta o botão de upgrade se o usuário já for premium/ilimitado
                     if (restricoesPlano && !restricoesPlano.limitarCapitulos && !restricoesPlano.bloqueado) {
                         document.getElementById('btnUpgradeGlobal').style.display = 'none';
                     }
@@ -479,7 +560,24 @@
         function renderizarAulas(cursoId) {
             currentCursoId = cursoId;
             const container = document.getElementById('listaAulas');
-            container.innerHTML = `<h4 style="color: var(--texto-secundario); margin-bottom: 15px; font-size: 12px; text-transform: uppercase;">Cronograma do Curso</h4>`;
+            container.innerHTML = "";
+
+            const tituloCronograma = document.createElement('h4');
+            tituloCronograma.style = "color: var(--texto-secundario); margin-bottom: 5px; font-size: 12px; text-transform: uppercase;";
+            tituloCronograma.innerText = "Cronograma do Curso";
+            container.appendChild(tituloCronograma);
+
+            // Avisar ao usuário Free de forma sutil que existem restrições
+            if(restricoesPlano && (restricoesPlano.limitarCapitulos || restricoesPlano.bloqueado)) {
+                const avisoFree = document.createElement('p');
+                avisoFree.style = "color: var(--dourado-principal); font-size: 10px; margin-bottom: 15px; font-weight: 500;";
+                avisoFree.innerText = "⚡ Modo de Degustação Ativo";
+                container.appendChild(avisoFree);
+            } else {
+                const divEspaco = document.createElement('div');
+                divEspaco.style.marginBottom = "15px";
+                container.appendChild(divEspaco);
+            }
             
             const aulasFiltradas = dbCursos.filter(c => c.idCurso === cursoId);
             
@@ -496,11 +594,17 @@
 
                 const div = document.createElement('div');
                 div.className = "aula-item" + (bloqueada ? " bloqueado" : "");
+                div.id = `item-aula-${aula.idAula}`;
                 
+                // Resgata progresso salvo no dispositivo
+                const estaConcluida = localStorage.getItem(`concluida_${currentCursoId}_${aula.idAula}`) === 'true';
+                const badgeConclusao = estaConcluida ? `<span class="concluida-badge">✓</span>` : '';
+
                 if(bloqueada) {
                     div.innerHTML = `<span>${aula.tituloAula}</span> <span class="tag-trava-discreta">🔒 Bloqueado</span>`;
+                    div.addEventListener('click', abrirModalUpgrade);
                 } else {
-                    div.innerText = aula.tituloAula;
+                    div.innerHTML = `<span>${aula.tituloAula}</span> ${badgeConclusao}`;
                     div.addEventListener('click', () => {
                         document.querySelectorAll('.aula-item').forEach(el => el.classList.remove('active'));
                         div.classList.add('active');
@@ -515,6 +619,7 @@
             currentAulaId = aula.idAula;
             document.getElementById('aulaTitulo').innerText = aula.tituloAula;
             document.getElementById('aulaConteudo').innerHTML = "<em>Carregando conteúdo executivo...</em>";
+            document.getElementById('metaLeitura').style.display = 'none';
             
             fetch(`${SCRIPT_URL}?action=carregarAula&idAmbiente=${currentAmbiente}&idCurso=${currentCursoId}&idAula=${currentAulaId}&idDoc=${aula.idDoc}`)
             .then(res => res.json())
@@ -531,8 +636,54 @@
                     document.getElementById('aulaConteudo').innerHTML = textoFormatado;
                     document.getElementById('txtAnotacoes').value = res.anotacao || "";
                     document.getElementById('statusSalvar').innerText = "✨ Sincronizado";
+
+                    // Cálculo Inteligente do Tempo Estimado de Leitura (200 palavras por minuto)
+                    const totalPalavras = res.conteudo.split(/\s+/).length;
+                    const tempoMinutos = Math.max(1, Math.ceil(totalPalavras / 200));
+                    document.getElementById('tempoEstimado').innerText = `⏱️ Leitura: ${tempoMinutos} min`;
+
+                    // Alinha o estado do botão de conclusão
+                    const estaConcluida = localStorage.getItem(`concluida_${currentCursoId}_${currentAulaId}`) === 'true';
+                    const btnConcluir = document.getElementById('btnMarcarConcluido');
+                    if (estaConcluida) {
+                        btnConcluir.classList.add('active');
+                        btnConcluir.innerText = '✓ Concluído';
+                    } else {
+                        btnConcluir.classList.remove('active');
+                        btnConcluir.innerText = '✓ Marcar Concluído';
+                    }
+                    
+                    document.getElementById('metaLeitura').style.display = 'flex';
                 }
             });
+        }
+
+        // Alternador do Status de Conclusão da Aula
+        function toggleConclusaoAula() {
+            if(!currentAulaId) return;
+            
+            const chave = `concluida_${currentCursoId}_${currentAulaId}`;
+            const estaConcluida = localStorage.getItem(chave) === 'true';
+            const btnConcluir = document.getElementById('btnMarcarConcluido');
+            const itemMenu = document.getElementById(`item-aula-${currentAulaId}`);
+            
+            if(estaConcluida) {
+                localStorage.setItem(chave, 'false');
+                btnConcluir.classList.remove('active');
+                btnConcluir.innerText = '✓ Marcar Concluído';
+                if(itemMenu) {
+                    const textoOriginal = itemMenu.querySelector('span').innerText;
+                    itemMenu.innerHTML = `<span>${textoOriginal}</span>`;
+                }
+            } else {
+                localStorage.setItem(chave, 'true');
+                btnConcluir.classList.add('active');
+                btnConcluir.innerText = '✓ Concluído';
+                if(itemMenu) {
+                    const textoOriginal = itemMenu.querySelector('span').innerText;
+                    itemMenu.innerHTML = `<span>${textoOriginal}</span> <span class="concluida-badge">✓</span>`;
+                }
+            }
         }
 
         document.getElementById('txtAnotacoes').addEventListener('input', () => {
