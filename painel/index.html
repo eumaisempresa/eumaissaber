@@ -177,21 +177,69 @@
             border-color: #2ECC71;
         }
         
+        /* ESTILOS DA CENTRAL DE CONTEÚDO AVANÇADO (HTML DO GOOGLE DOCS) */
         .conteudo-aula-dinamico {
             font-family: 'DM Sans', sans-serif;
             font-size: 15px;
             color: #1A2430;
             text-align: justify;
-            white-space: pre-line;
         }
 
-        .conteudo-aula-dinamico .topico-destaque {
-            color: #0A3663 !important;
+        /* Títulos e Subtítulos importados do Docs */
+        .conteudo-aula-dinamico h1, .conteudo-aula-dinamico h2, .conteudo-aula-dinamico h3 {
+            font-family: 'Cormorant Garamond', serif;
+            color: #0A3663;
+            margin-top: 18px;
+            margin-bottom: 6px;
             font-weight: 600;
-            font-size: 16px;
-            margin-top: 12px;
-            margin-bottom: 4px;
+            line-height: 32px;
+        }
+        .conteudo-aula-dinamico h1 { font-size: 22px; }
+        .conteudo-aula-dinamico h2 { font-size: 19px; }
+        .conteudo-aula-dinamico h3 { font-size: 17px; }
+
+        /* Estilização Executiva para Tabelas */
+        .conteudo-aula-dinamico table {
+            width: 100% !important;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+            line-height: 20px;
+            background: #FFFFFF;
+        }
+        .conteudo-aula-dinamico th, .conteudo-aula-dinamico td {
+            border: 1px solid #CBD5E1 !important;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        .conteudo-aula-dinamico th {
+            background-color: #F1F5F9 !important;
+            color: #0A3663;
+            font-weight: 600;
+        }
+
+        /* Ajuste de Imagens e Prints */
+        .conteudo-aula-dinamico img {
+            max-width: 100% !important;
+            height: auto !important;
+            border-radius: 4px;
+            margin: 18px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             display: block;
+        }
+
+        /* Formatação de Listas (Marcadores e Numéricas) */
+        .conteudo-aula-dinamico ul, .conteudo-aula-dinamico ol {
+            padding-left: 24px;
+            margin: 12px 0;
+        }
+        .conteudo-aula-dinamico li {
+            margin-bottom: 4px;
+        }
+
+        /* Parágrafos vindos do Docs */
+        .conteudo-aula-dinamico p {
+            margin-bottom: 12px;
         }
 
         .post-it-nota {
@@ -261,7 +309,6 @@
             z-index: 996;
         }
 
-        /* Modal Customizado de Estímulo para Conta Free */
         .modal-upgrade {
             display: none;
             position: fixed;
@@ -367,7 +414,6 @@
         </div>
     </div>
 
-    <!-- Modal de Upgrade para Contas Limitadas -->
     <div class="modal-backdrop" id="upgradeBackdrop" onclick="fecharModalUpgrade()"></div>
     <div class="modal-upgrade" id="modalUpgrade">
         <h2 style="margin-bottom: 10px;">Conteúdo Exclusivo 👑</h2>
@@ -394,7 +440,6 @@
             <div class="folha-caderno">
                 <div id="aulaTitulo" style="margin-bottom: 5px; font-size: 28px; line-height: 34px;">Selecione uma aula ao lado para iniciar</div>
                 
-                <!-- Barra de Metadados (Tempo estimado e Conclusão) -->
                 <div class="meta-leitura" id="metaLeitura" style="display: none;">
                     <span id="tempoEstimado">⏱️ Leitura: -- min</span>
                     <button class="btn-concluir" id="btnMarcarConcluido" onclick="toggleConclusaoAula()">✓ Marcar Concluído</button>
@@ -567,7 +612,6 @@
             tituloCronograma.innerText = "Cronograma do Curso";
             container.appendChild(tituloCronograma);
 
-            // Avisar ao usuário Free de forma sutil que existem restrições
             if(restricoesPlano && (restricoesPlano.limitarCapitulos || restricoesPlano.bloqueado)) {
                 const avisoFree = document.createElement('p');
                 avisoFree.style = "color: var(--dourado-principal); font-size: 10px; margin-bottom: 15px; font-weight: 500;";
@@ -596,7 +640,6 @@
                 div.className = "aula-item" + (bloqueada ? " bloqueado" : "");
                 div.id = `item-aula-${aula.idAula}`;
                 
-                // Resgata progresso salvo no dispositivo
                 const estaConcluida = localStorage.getItem(`concluida_${currentCursoId}_${aula.idAula}`) === 'true';
                 const badgeConclusao = estaConcluida ? `<span class="concluida-badge">✓</span>` : '';
 
@@ -625,24 +668,18 @@
             .then(res => res.json())
             .then(res => {
                 if(res.success) {
-                    let textoFormatado = res.conteudo.split('\n').map(linha => {
-                        let trimLinha = linha.trim();
-                        if (/^\d+(\.\d+)*\.?/.test(trimLinha)) {
-                            return `<span class="topico-destaque">${linha}</span>`;
-                        }
-                        return linha;
-                    }).join('\n');
-
-                    document.getElementById('aulaConteudo').innerHTML = textoFormatado;
+                    // 1. Injeta o HTML nativo e limpo direto do Google Docs
+                    document.getElementById('aulaConteudo').innerHTML = res.conteudo;
                     document.getElementById('txtAnotacoes').value = res.anotacao || "";
                     document.getElementById('statusSalvar').innerText = "✨ Sincronizado";
 
-                    // Cálculo Inteligente do Tempo Estimado de Leitura (200 palavras por minuto)
-                    const totalPalavras = res.conteudo.split(/\s+/).length;
+                    // 2. Cálculo Inteligente do Tempo Estimado de Leitura com base no HTML de texto gerado
+                    const textoLimpo = document.getElementById('aulaConteudo').innerText;
+                    const totalPalavras = textoLimpo.split(/\s+/).length;
                     const tempoMinutos = Math.max(1, Math.ceil(totalPalavras / 200));
                     document.getElementById('tempoEstimado').innerText = `⏱️ Leitura: ${tempoMinutos} min`;
 
-                    // Alinha o estado do botão de conclusão
+                    // 3. Alinha o estado do botão de conclusão
                     const estaConcluida = localStorage.getItem(`concluida_${currentCursoId}_${currentAulaId}`) === 'true';
                     const btnConcluir = document.getElementById('btnMarcarConcluido');
                     if (estaConcluida) {
@@ -654,11 +691,14 @@
                     }
                     
                     document.getElementById('metaLeitura').style.display = 'flex';
+                } else {
+                    document.getElementById('aulaConteudo').innerHTML = `<p style="color:red;">${res.error || "Erro ao carregar o documento."}</p>`;
                 }
+            }).catch(() => {
+                document.getElementById('aulaConteudo').innerHTML = '<p style="color:red;">Erro fatal de conectividade na requisição do módulo.</p>';
             });
         }
 
-        // Alternador do Status de Conclusão da Aula
         function toggleConclusaoAula() {
             if(!currentAulaId) return;
             
