@@ -129,13 +129,43 @@
     </div>
 
     <script>
+        // URL DO SEU GOOGLE APPS SCRIPT WEB APP
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6nf5lgvSTCtX2n4kNKaQHqfJtv9QvtjJGgBMcmrtLpGybae7eLb5vlDm06bzrxgF2DA/exec";
+        
+        // Armazena a senha globalmente após autenticar para usar nas requisições do cadastrarAluno
+        let senhaMasterValidada = ""; 
+
         document.getElementById('btnAuthGestor').addEventListener('click', function() {
             const pass = document.getElementById('senhaGestor').value;
-            if(pass === "EU+ADMIN") {
-                document.getElementById('authOverlay').style.display = 'none';
-            } else {
-                alert("Senha incorreta. Acesso negado.");
-            }
+            const btn = this;
+            
+            btn.innerText = "Verificando...";
+            btn.disabled = true;
+
+            // Altera para verificar na nova rota do doGet do Apps Script
+            fetch(`${SCRIPT_URL}?action=validarAdmin&senha=${encodeURIComponent(pass)}`)
+            .then(res => res.json())
+            .then(res => {
+                if(res.autorizado) {
+                    senhaMasterValidada = pass;
+                    document.getElementById('authOverlay').style.display = 'none';
+                } else {
+                    alert(res.error || "Senha incorreta. Acesso negado.");
+                }
+                btn.innerText = "Autenticar Admin";
+                btn.disabled = false;
+            })
+            .catch(() => {
+                // FALLBACK DE SEGURANÇA: Se o script ainda não foi atualizado, aceita a senha estática clássica temporariamente
+                if(pass === "EU+ADMIN") {
+                    senhaMasterValidada = pass;
+                    document.getElementById('authOverlay').style.display = 'none';
+                } else {
+                    alert("Erro de comunicação com o servidor ou senha inválida.");
+                }
+                btn.innerText = "Autenticar Admin";
+                btn.disabled = false;
+            });
         });
 
         document.getElementById('btnDispararWa').addEventListener('click', function() {
