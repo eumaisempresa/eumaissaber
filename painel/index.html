@@ -173,7 +173,7 @@
             font-size: 14px;
         }
 
-       .folha-caderno {
+        .folha-caderno {
             background-color: #FFFFFF;
             width: 100%;
             max-width: 850px;
@@ -244,40 +244,38 @@
             margin-bottom: 28px;
         }
 
-        /* AJUSTE VISUAL DA QUEBRA DO TEXTO (*.) */
         .custom-bullet {
             display: block;
             position: relative;
-            padding-left: 20px;
-            margin-bottom: 0px;
+            padding-left: 24px;
+            margin-bottom: 6px;
             line-height: 28px;
             text-align: left;
         }
         .custom-bullet::before {
             content: "•";
             position: absolute;
-            left: 0px;
+            left: 6px;
             top: 0px;
             color: #1A2430;
-            font-size: 22px;
+            font-size: 20px;
         }
 
-        /* AJUSTE VISUAL DA QUEBRA DO TEXTO (-.) */
         .custom-arrow {
             display: block;
             position: relative;
-            padding-left: 20px;
-            margin-bottom: 0px;
+            padding-left: 24px;
+            margin-bottom: 6px;
             line-height: 28px;
             text-align: left;
         }
         .custom-arrow::before {
             content: "➔";
             position: absolute;
-            left: 0px;
+            left: 4px;
             top: 0px;
             color: var(--dourado-principal);
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .table-container-responsive {
@@ -734,7 +732,8 @@
         });
 
         function carregarMenu() {
-            fetch(`${SCRIPT_URL}?action=carregarMenu`)
+            // CORREÇÃO: Enviando o parâmetro idAmbiente para o Apps Script trazer os cursos vinculados
+            fetch(`${SCRIPT_URL}?action=carregarMenu&idAmbiente=${encodeURIComponent(currentAmbiente)}`)
             .then(res => res.json())
             .then(res => {
                 if(res.success) {
