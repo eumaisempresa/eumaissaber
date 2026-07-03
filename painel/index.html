@@ -593,7 +593,7 @@
             document.getElementById('boxRecuperar').style.display = mostrarRecuperar ? 'block' : 'none';
         }
 
-        // MOTOR DE TRATAMENTO DE TEXTO OTIMIZADO (COM CORREÇÃO PARA A SETA E TABELA RESPONSIVA)
+        // MOTOR DE TRATAMENTO DE TEXTO OTIMIZADO (COM HIGHLIGHT DE SUBTEMAS ATÉ DOIS PONTOS)
         function tratarSintaxeConteudo(textoBruto) {
             if (!textoBruto) return "";
             
@@ -643,14 +643,23 @@
                     continue;
                 }
 
+                // Processamento do Marcador de Lista (*.) com Negrito até o caractere ":"
                 if (/^\s*\*\.\s*/.test(linhaClean)) {
-                    linhas[i] = linhaOriginal.replace(/^\s*\*\.\s*(.+?)$/g, '<div class="custom-bullet">$1</div>');
+                    let conteudo = linhaClean.replace(/^\s*\*\.\s*/, '');
+                    if (conteudo.includes(':')) {
+                        conteudo = conteudo.replace(/^([^:]+:)/, '<strong>$1</strong>');
+                    }
+                    linhas[i] = `<div class="custom-bullet">${conteudo}</div>`;
                     continue;
                 }
 
-                /* CORREÇÃO DO BUG: O caractere hífen '-' precisava ser escapado com '\' na RegEx */
+                // Processamento da Seta (-.) com Negrito até o caractere ":"
                 if (/^\s*\-\.\s*/.test(linhaClean)) {
-                    linhas[i] = linhaOriginal.replace(/^\s*\-\.\s*(.+?)$/g, '<div class="custom-arrow">$1</div>');
+                    let conteudo = linhaClean.replace(/^\s*\-\.\s*/, '');
+                    if (conteudo.includes(':')) {
+                        conteudo = conteudo.replace(/^([^:]+:)/, '<strong>$1</strong>');
+                    }
+                    linhas[i] = `<div class="custom-arrow">${conteudo}</div>`;
                     continue;
                 }
             }
@@ -761,7 +770,7 @@
         function atualizarBarraProgresso(cursoId) {
             const aulasFiltradas = dbCursos.filter(c => c.idCurso === cursoId);
             let totalMinutosCurso = 0;
-            let minutosConcluidos = 0;
+            let minutesConcluidos = 0;
 
             aulasFiltradas.forEach(aula => {
                 // Pega o tempo em minutos da aula (se já calculado e salvo no cache) ou assume 10 min por padrão enquanto não abre
@@ -770,14 +779,14 @@
 
                 const estaConcluida = localStorage.getItem(`concluida_${cursoId}_${aula.idAula}`) === 'true';
                 if (estaConcluida) {
-                    minutosConcluidos += minutosAula;
+                    minutesConcluidos += minutosAula;
                 }
             });
 
-            const porcentagem = totalMinutosCurso > 0 ? Math.round((minutosConcluidos / totalMinutosCurso) * 100) : 0;
+            const porcentagem = totalMinutosCurso > 0 ? Math.round((minutesConcluidos / totalMinutosCurso) * 100) : 0;
             
             document.getElementById('lblPorcentagem').innerText = `${porcentagem}%`;
-            document.getElementById('lblMinutosFracao').innerText = `${minutosConcluidos} de ${totalMinutosCurso} min`;
+            document.getElementById('lblMinutosFracao').innerText = `${minutesConcluidos} de ${totalMinutosCurso} min`;
             document.getElementById('barFill').style.width = `${porcentagem}%`;
         }
 
