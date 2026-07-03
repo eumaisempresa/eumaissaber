@@ -531,89 +531,84 @@
    function tratarSintaxeConteudo(textoBruto) {
     if (!textoBruto) return "";
     
-    let htmlProcessado = textoBruto;
-
-    // 1) Padroniza quebras de linha para facilitar o processamento
-    htmlProcessado = htmlProcessado.replace(/\n/g, '<br>');
-
-    // 2) COMPILADOR DE TABELAS REVOLUCIONÁRIO (Suporta T0., T.0, T1., T.1 inline ou quebrados com separador "|")
-    // Encontra sequências de marcadores de tabela e reconstrói o HTML puro
-    const regexTabela = /(?:T\d+\.|T\.\d+)\s*[^T<]*(?:\|[^T<]*)*/gi;
+    // 1) Padroniza quebras de linha nativas
+    let htmlProcessado = textoBruto.replace(/\n/g, '<br>');
+    const linhas = htmlProcessado.split('<br>');
     
-    // Vamos capturar o bloco completo de tabela para isolá-lo de textos normais
-    let match;
-    let textoComTabelas = htmlProcessado;
-    
-    // Expressão regular para capturar cada linha/token de linha da tabela
-    const regexMarcadorLinha = /(T\d+\.|T\.\d+)\s*([^T<]+)/gi;
-    
-    let emBlocoTabela = false;
-    let tabelaConstruida = "";
-    
-    // Vamos processar a estrutura de forma linear para aceitar tanto na mesma linha quanto em quebras <br>
-    htmlProcessado = htmlProcessado.replace(/(?:<br>|^)\s*(T\d+\.|T\.\d+)\s*([^<]+)(?=<br>|$)/gi, function(match, marcador, conteudo) {
-        // Remove espaços extras
-        conteudo = conteudo.trim();
-        
-        // Determina se é cabeçalho (T0 ou T.0) ou dado comum
-        const ehCabecalho = /0/.test(marcador);
-        const tagCelula = ehCabecalho ? 'th' : 'td';
-        
-        // Divide as colunas pelo separador "|"
-        const colunas = conteudo.split('|');
-        let htmlLinha = '<tr>';
-        
-        colunas.forEach(col => {
-            htmlLinha += `<${tagCelula}>${col.trim()}</${tagCelula}>`;
-        });
-        htmlLinha += '</tr>';
-        
-        return `${htmlLinha}`;
-    });
+    let emTabela = false;
+    let blocoTabelaHtml = "";
 
-    // Se o usuário digitou tudo inline na mesma linha (ex: T.0 Nome|Telefone T.1 Bruno|...):
-    htmlProcessado = htmlProcessado.replace(/(T\d+\.|T\.\d+)\s*([^T<]+)/gi, function(match, marcador, conteudo) {
-        if (match.includes('')) return match; // Já processado acima
-        
-        conteudo = conteudo.trim();
-        const ehCabecalho = /0/.test(marcador);
-        const tagCelula = ehCabecalho ? 'th' : 'td';
-        
-        const colunas = conteudo.split('|');
-        let htmlLinha = '<tr>';
-        colunas.forEach(col => {
-            htmlLinha += `<${tagCelula}>${col.trim()}</${tagCelula}>`;
-        });
-        htmlLinha += '</tr>';
-        
-        return `${htmlLinha}`;
-    });
+    // Processamento linear (Linha por Linha) para garantir a ordem correta dos elementos
+    for (let i = 0; i < linhas.length; i++) {
+        let linhaOriginal = linhas[i];
+        let linhaClean = linhaOriginal.trim();
 
-    // Agrupa todas as linhas marcadas consecutivas dentro de uma tag <table> real
-    htmlProcessado = htmlProcessado.replace(/(?:([\s\S]*?)(?:<br>|\s*))+/gi, function(blocoCompleto) {
-        // Extrai apenas as tags <tr> encontradas no bloco de correspondência
-        const linhasTr = blocoCompleto.replace(/||<br>/g, '').trim();
-        return `<table style="width: 100%; border-collapse: collapse; margin: 15px 0;">${linhasTr}</table>`;
-    });
+        // 2) DETECTOR E PROCESSADOR DE TABELA INDEPENDENTE (Preserva a posição exata)
+        if (/^[tT]\d+\./.test(linhaClean) || /^[tT]\.[0-9]/.test(linhaClean)) {
+            if (!emTabela) {
+                emTabela = true;
+                blocoTabelaHtml = '<table style="width: 100%; border-collapse: collapse; margin: 15px 0;">';
+            }
 
-    // 3) LINHA INTEIRA DO TÍTULO NUMÉRICO EM NEGRITO E AMARELO (1.2., 1.3., etc)
-    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*(\d+(?:\.\d+)*\.)\s*([^\<]+|.+?)(?=\<br\>|$)/g, 
-        '<br><div style="color: #C4974A; font-weight: bold; font-family: \'Cormorant Garamond\', serif; font-size: 21px; margin-top: 15px;">$1 $2</div>');
+            // Identifica se é linha de cabeçalho (T0. ou T.0) ou de dados
+            const ehCabecalho = /0/.test(linhaClean.split(/\s+/)[0]);
+            const tagCelula = ehCabecalho ? 'th' : 'td';
 
-    // 4) NOVA REGRA PARA LETRAS COM PARÊNTESES "a)", "b)" (Cor Amarela, Sem Negrito)
-    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*([a-zA-Z]\))\s*([^\<]+|.+?)(?=\<br\>|$)/g, 
-        '<br><div style="margin-left: 20px; color: #333333;"><span style="color: #C4974A; font-weight: normal;">$1</span> $2</div>');
+            // Remove o marcador inicial (ex: T0. ou T.1) para isolar o conteúdo
+            let conteudoLinha = linhaClean.replace(/^[tT]\d+\.\s*|^[tT]\.\d+\s*/i, '');
 
-    // 5) MARCADOR BULLET (*.)
-    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*\*\.\s*([^\<]+|.+?)(?=\<br\>|$)/g, '<div class="custom-bullet">$1</div>');
+            // Divide as colunas usando o pipe "|"
+            const colunas = conteudoLinha.split('|');
+            
+            blocoTabelaHtml += '<tr>';
+            colunas.forEach(col => {
+                blocoTabelaHtml += `<${tagCelula}>${col.trim()}</${tagCelula}>`;
+            });
+            blocoTabelaHtml += '</tr>';
 
-    // 6) MARCADOR SETA (-.)
-    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*\-\.\s*([^\<]+|.+?)(?=\<br\>|$)/g, '<div class="custom-arrow">$1</div>');
+            linhas[i] = ''; // Limpa a linha bruta original
+            continue;
+        } else {
+            // Se saiu da tabela, fecha a estrutura e injeta no ponto exato
+            if (emTabela) {
+                blocoTabelaHtml += '</table>';
+                linhas[i] = blocoTabelaHtml + '<br>' + linhaOriginal;
+                emTabela = false;
+                blocoTabelaHtml = "";
+            }
+        }
 
-    // Limpeza de quebras órfãs ou triplas geradas pelos blocos
+        // 3) COBRE TÍTULOS PRINCIPAIS (1.) E SUBTÍTULOS (1.1., 1.2.3.) EM AMARELO E NEGRITO
+        if (/^\s*\d+(\.\d+)*\./.test(linhaClean)) {
+            linhas[i] = linhaOriginal.replace(/^\s*(\d+(?:\.\d+)*\.)\s*(.+?)$/g, 
+                '<div style="color: #C4974A; font-weight: bold; font-family: \'Cormorant Garamond\', serif; font-size: 21px; margin-top: 15px;">$1 $2</div>');
+            continue;
+        }
+
+        // 4) MARCADOR BULLET (*.)
+        if (/^\s*\*\.\s*/.test(linhaClean)) {
+            linhas[i] = linhaOriginal.replace(/^\s*\*\.\s*(.+?)$/g, '<div class="custom-bullet">$1</div>');
+            continue;
+        }
+
+        // 5) MARCADOR SETA (-.)
+        if (/^\s*\-\.\s*/.test(linhaClean)) {
+            linhas[i] = linhaOriginal.replace(/^\s*\-\.\s*(.+?)$/g, '<div class="custom-arrow">$1</div>');
+            continue;
+        }
+    }
+
+    // Se o texto terminar com uma tabela ativa, fecha a estrutura externa
+    if (emTabela) {
+        blocoTabelaHtml += '</table>';
+        linhas[linhas.length - 1] += blocoTabelaHtml;
+    }
+
+    // Junta as linhas novamente limpando espaçamentos duplicados residuais
+    htmlProcessado = linhas.join('<br>');
     htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
-    htmlProcessado = htmlProcessado.replace(/<table><br>/g, '<table>');
-    htmlProcessado = htmlProcessado.replace(/<\/table><br>/g, '</table>');
+    htmlProcessado = htmlProcessado.replace(/<br><div/g, '<div');
+    htmlProcessado = htmlProcessado.replace(/<\/div><br>/g, '</div>');
 
     return htmlProcessado;
 }       
