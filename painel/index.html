@@ -47,6 +47,20 @@
             gap: 15px;
         }
 
+        .selector-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .selector-label {
+            font-size: 10px;
+            color: var(--dourado-principal);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         select {
             background-color: var(--fundo-terciario);
             border: 1px solid var(--bordas);
@@ -88,6 +102,7 @@
 
         .sidebar { background-color: var(--fundo-secundario); border-right: 1px solid var(--bordas); padding: 20px; overflow-y: auto; }
         
+        /* CONTAINER RESTRITO PARA A TABELA CONSEGUIR DAR SCROLL */
         .content-body { 
             padding: 40px 20px; 
             overflow-y: auto; 
@@ -103,6 +118,35 @@
             flex-direction: column; 
             align-items: center;
             overflow-y: auto;
+        }
+
+        /* CONTAINER DA BARRA DE PROGRESSO */
+        .progress-container {
+            margin: 12px 0 18px 0;
+            background: var(--fundo-terciario);
+            border: 1px solid var(--bordas);
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--texto-secundario);
+            margin-bottom: 6px;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--dourado-principal), var(--dourado-secundario));
+            transition: width 0.4s ease;
         }
 
         .aula-item {
@@ -233,31 +277,43 @@
             margin-right: 10px;
         }
 
-        /* TABELA EXECUTIVA ADAPTATIVA ATUALIZADA */
+        /* TABELA EXECUTIVA ADAPTATIVA REESTRUTURADA PARA CELULAR */
+        .table-container-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 24px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .conteudo-aula-dinamico table {
             width: 100%;
+            min-width: 500px; /* Impede que colunas fiquem esmagadas no mobile */
             border-collapse: collapse;
-            margin: 24px 0;
             font-size: 14px;
             background: #FFFFFF;
             font-family: 'DM Sans', sans-serif;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            table-layout: fixed; /* Distribuição controlada de largura */
         }
         .conteudo-aula-dinamico th, .conteudo-aula-dinamico td {
             border: 1px solid #CBD5E1;
             padding: 12px 14px;
             text-align: left;
+            word-wrap: break-word;
+            vertical-align: top;
         }
         .conteudo-aula-dinamico th {
-            background-color: #475569 !important; /* Fundo Cinza Médio Executivo */
-            color: #FFFFFF !important; /* Texto Branco para Contraste */
+            background-color: #475569 !important; 
+            color: #FFFFFF !important; 
             font-weight: bold !important;
         }
-        /* Garante que a primeira coluna nunca divida ou aperte */
+        
+        /* Definição equilibrada de colunas (Se houver 3 colunas padrão) */
         .conteudo-aula-dinamico th:first-child, .conteudo-aula-dinamico td:first-child {
-            white-space: nowrap !important;
+            width: 30%; /* Primeira coluna proporcional */
             font-weight: 500;
         }
+
         .conteudo-aula-dinamico tr:nth-child(even) {
             background-color: #F8FAFC;
         }
@@ -358,7 +414,7 @@
                 width: 100%;
                 gap: 10px;
             }
-            select, .btn-upgrade-global {
+            .selector-wrapper, select, .btn-upgrade-global {
                 width: 100%;
             }
 
@@ -368,7 +424,7 @@
             }
 
             .sidebar {
-                max-height: 280px;
+                max-height: 380px; /* Aumentado ligeiramente para comportar a barra de progresso */
                 border-right: none;
                 border-bottom: 1px solid var(--bordas);
             }
@@ -445,7 +501,10 @@
     <header>
         <div style="font-size: 24px; font-weight: bold;" class="brand-title">EU⁺ Saber</div>
         <div class="header-actions">
-            <select id="selectCurso"></select>
+            <div class="selector-wrapper">
+                <span class="selector-label">Selecione o Curso</span>
+                <select id="selectCurso"></select>
+            </div>
             <a href="https://www.asaas.com/c/seu-link-de-assinatura-aqui" target="_blank" class="btn-upgrade-global" id="btnUpgradeGlobal">⭐ Desbloquear Plano Premium</a>
         </div>
         <div id="nomeUsuario" style="font-size: 14px; color: var(--dourado-principal);">Usuário: <span id="lblNomeAluno">---</span> <span id="lblAmbiente" style="opacity:0.5; font-size:11px;"></span></div>
@@ -499,6 +558,7 @@
         let currentCursoId = "";
         let currentAulaId = "";
         let saveTimeout;
+        let minutosAulasCache = {}; // Guarda a estimativa de tempo de cada aula para o cálculo da barra de progresso
 
         function toggleMobileNote() {
             if (window.innerWidth <= 900) {
@@ -533,7 +593,7 @@
             document.getElementById('boxRecuperar').style.display = mostrarRecuperar ? 'block' : 'none';
         }
 
-        // MOTOR DE TRATAMENTO DE TEXTO TOTALMENTE OTIMIZADO
+        // MOTOR DE TRATAMENTO DE TEXTO OTIMIZADO (COM CORREÇÃO PARA A SETA E TABELA RESPONSIVA)
         function tratarSintaxeConteudo(textoBruto) {
             if (!textoBruto) return "";
             
@@ -550,7 +610,8 @@
                 if (/^[tT]\d+\./.test(linhaClean) || /^[tT]\.[0-9]/.test(linhaClean)) {
                     if (!emTabela) {
                         emTabela = true;
-                        blocoTabelaHtml = '<table>';
+                        /* Injeta a div envoltória para controle de scroll responsivo */
+                        blocoTabelaHtml = '<div class="table-container-responsive"><table>';
                     }
 
                     const ehCabecalho = /0/.test(linhaClean.split(/\s+/)[0]);
@@ -569,7 +630,7 @@
                     continue;
                 } else {
                     if (emTabela) {
-                        blocoTabelaHtml += '</table>';
+                        blocoTabelaHtml += '</table></div>';
                         linhas[i] = blocoTabelaHtml + '<br>' + linhaOriginal;
                         emTabela = false;
                         blocoTabelaHtml = "";
@@ -587,6 +648,7 @@
                     continue;
                 }
 
+                /* CORREÇÃO DO BUG: O caractere hífen '-' precisava ser escapado com '\' na RegEx */
                 if (/^\s*\-\.\s*/.test(linhaClean)) {
                     linhas[i] = linhaOriginal.replace(/^\s*\-\.\s*(.+?)$/g, '<div class="custom-arrow">$1</div>');
                     continue;
@@ -594,7 +656,7 @@
             }
 
             if (emTabela) {
-                blocoTabelaHtml += '</table>';
+                blocoTabelaHtml += '</table></div>';
                 linhas[linhas.length - 1] += blocoTabelaHtml;
             }
 
@@ -695,6 +757,30 @@
             if(uniqueCursos.length > 0) renderizarAulas(uniqueCursos[0]);
         }
 
+        // FUNÇÃO QUE CALCULA E ATUALIZA A BARRA DE % CONCLUÍDO POR MINUTOS ESTIMADOS
+        function atualizarBarraProgresso(cursoId) {
+            const aulasFiltradas = dbCursos.filter(c => c.idCurso === cursoId);
+            let totalMinutosCurso = 0;
+            let minutosConcluidos = 0;
+
+            aulasFiltradas.forEach(aula => {
+                // Pega o tempo em minutos da aula (se já calculado e salvo no cache) ou assume 10 min por padrão enquanto não abre
+                const minutosAula = minutosAulasCache[`${cursoId}_${aula.idAula}`] || 10;
+                totalMinutosCurso += minutosAula;
+
+                const estaConcluida = localStorage.getItem(`concluida_${cursoId}_${aula.idAula}`) === 'true';
+                if (estaConcluida) {
+                    minutosConcluidos += minutosAula;
+                }
+            });
+
+            const porcentagem = totalMinutosCurso > 0 ? Math.round((minutosConcluidos / totalMinutosCurso) * 100) : 0;
+            
+            document.getElementById('lblPorcentagem').innerText = `${porcentagem}%`;
+            document.getElementById('lblMinutosFracao').innerText = `${minutosConcluidos} de ${totalMinutosCurso} min`;
+            document.getElementById('barFill').style.width = `${porcentagem}%`;
+        }
+
         function renderizarAulas(cursoId) {
             currentCursoId = cursoId;
             const container = document.getElementById('listaAulas');
@@ -704,6 +790,20 @@
             tituloCronograma.style = "color: var(--texto-secundario); margin-bottom: 5px; font-size: 12px; text-transform: uppercase;";
             tituloCronograma.innerText = "Cronograma do Curso";
             container.appendChild(tituloCronograma);
+
+            // INJEÇÃO DA BARRA DE PROGRESSO DINÂMICA (ABAIXO DO CRONOGRAMA)
+            const progressWrapper = document.createElement('div');
+            progressWrapper.className = "progress-container";
+            progressWrapper.innerHTML = `
+                <div class="progress-info">
+                    <span id="lblPorcentagem" style="font-weight: bold; color: var(--dourado-principal);">0%</span>
+                    <span id="lblMinutosFracao">0 de 0 min</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="barFill"></div>
+                </div>
+            `;
+            container.appendChild(progressWrapper);
 
             if(restricoesPlano && (restricoesPlano.limitarCapitulos || restricoesPlano.bloqueado)) {
                 const avisoFree = document.createElement('p');
@@ -749,6 +849,9 @@
                 }
                 container.appendChild(div);
             });
+
+            // Atualiza os valores da barra com os tempos atuais em cache
+            atualizarBarraProgresso(cursoId);
         }
 
         function exibirAula(aula) {
@@ -776,6 +879,10 @@
                     const tempoEstimado = Math.max(1, Math.ceil(contagemPalavras / 150));
                     document.getElementById('tempoEstimado').innerText = `⏱️ Leitura: ${tempoEstimado} min`;
                     
+                    // Alimenta o cache global de minutos para tornar a barra precisa
+                    minutosAulasCache[`${currentCursoId}_${currentAulaId}`] = tempoEstimado;
+                    atualizarBarraProgresso(currentCursoId);
+
                     document.getElementById('txtAnotacoes').value = res.anotacao || "";
                     atualizarStatusBotaoConcluido();
                 } else {
