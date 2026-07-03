@@ -177,13 +177,12 @@
             border-color: #2ECC71;
         }
         
-        /* 1) QUEBRA ELEGANTE E 2) FONTE DE LIVRO (LORA) */
         .conteudo-aula-dinamico {
             font-family: 'Lora', serif;
             font-size: 16px;
             color: #1A2430;
             text-align: justify;
-            line-height: 1.75;
+            line-height: 1.8;
             word-break: break-word;
         }
 
@@ -200,7 +199,7 @@
         .conteudo-aula-dinamico h3 { font-size: 18px; }
 
         .conteudo-aula-dinamico p {
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
 
         /* CUSTOMIZAÇÃO DE ELEMENTOS INJETADOS */
@@ -208,7 +207,8 @@
             display: flex;
             align-items: flex-start;
             margin-left: 15px;
-            margin-bottom: 8px;
+            margin-bottom: 16px;
+            line-height: 1.8;
         }
         .custom-bullet::before {
             content: "•";
@@ -223,7 +223,8 @@
             display: flex;
             align-items: center;
             margin-left: 10px;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
+            line-height: 1.8;
             font-weight: 500;
         }
         .custom-arrow::before {
@@ -232,11 +233,11 @@
             margin-right: 10px;
         }
 
-        /* TABELA EXECUTIVA ADAPTATIVA */
+        /* TABELA EXECUTIVA ADAPTATIVA ATUALIZADA */
         .conteudo-aula-dinamico table {
             width: 100%;
             border-collapse: collapse;
-            margin: 22px 0;
+            margin: 24px 0;
             font-size: 14px;
             background: #FFFFFF;
             font-family: 'DM Sans', sans-serif;
@@ -248,9 +249,14 @@
             text-align: left;
         }
         .conteudo-aula-dinamico th {
-            background-color: #F1F5F9;
-            color: #0A3663;
-            font-weight: 600;
+            background-color: #475569 !important; /* Fundo Cinza Médio Executivo */
+            color: #FFFFFF !important; /* Texto Branco para Contraste */
+            font-weight: bold !important;
+        }
+        /* Garante que a primeira coluna nunca divida ou aperte */
+        .conteudo-aula-dinamico th:first-child, .conteudo-aula-dinamico td:first-child {
+            white-space: nowrap !important;
+            font-weight: 500;
         }
         .conteudo-aula-dinamico tr:nth-child(even) {
             background-color: #F8FAFC;
@@ -432,7 +438,7 @@
     <div class="modal-upgrade" id="modalUpgrade">
         <h2 style="margin-bottom: 10px;">Conteúdo Exclusivo 👑</h2>
         <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 20px;">Esta aula faz parte do plano corporativo completo. Faça o upgrade agora para destravar todos os módulos estratégicos sem restrições.</p>
-        <button onclick="window.open(URL_ASAAS_UPGRADE, '_blank')", style="width:100%; padding:12px; background: var(--dourado-principal); color: var(--fundo-principal);">Desbloquear Agora</button>
+        <button onclick="window.open(URL_ASAAS_UPGRADE, '_blank')" style="width:100%; padding:12px; background: var(--dourado-principal); color: var(--fundo-principal);">Desbloquear Agora</button>
         <span class="link-recuperar" style="margin-top: 15px;" onclick="fecharModalUpgrade()">Continuar lendo o material gratuito</span>
     </div>
 
@@ -469,7 +475,7 @@
 
         <div class="notes-panel" id="notesPanel">
             <h3 style="font-size: 18px; margin-bottom: 5px; text-align: center;">✍️ Caderno de Insights</h3>
-            <p style="color: var(--texto-secundario); font-size: 12px; text-align: center; margin-bottom: 5px;">Sincronização em nuvem ativa</p>
+            <p style="color: var(--texto-secundario); font-size: 12px; text-align: center; margin-bottom: 5px;">Sincronização em nuvem activa</p>
             
             <div class="post-it-nota">
                 <div class="post-it-alfinete"></div>
@@ -524,94 +530,89 @@
 
         function alternarTelas(mostrarRecuperar) {
             document.getElementById('boxLogin').style.display = mostrarRecuperar ? 'none' : 'block';
-            document.getElementById('boxRecuperar').style.display = mostrarRecRecover ? 'block' : 'none';
+            document.getElementById('boxRecuperar').style.display = mostrarRecuperar ? 'block' : 'none';
         }
 
-        // FUNÇÃO DE TRATAMENTO DINÂMICO DE TEXTO (SINTAXE DO SEU PAINEL)
-   function tratarSintaxeConteudo(textoBruto) {
-    if (!textoBruto) return "";
-    
-    // 1) Padroniza quebras de linha nativas
-    let htmlProcessado = textoBruto.replace(/\n/g, '<br>');
-    const linhas = htmlProcessado.split('<br>');
-    
-    let emTabela = false;
-    let blocoTabelaHtml = "";
+        // MOTOR DE TRATAMENTO DE TEXTO TOTALMENTE OTIMIZADO
+        function tratarSintaxeConteudo(textoBruto) {
+            if (!textoBruto) return "";
+            
+            // 1) Padroniza as quebras nativas
+            let htmlProcessado = textoBruto.replace(/\n/g, '<br>');
+            const linhas = htmlProcessado.split('<br>');
+            
+            let emTabela = false;
+            let blocoTabelaHtml = "";
 
-    // Processamento linear (Linha por Linha) para garantir a ordem correta dos elementos
-    for (let i = 0; i < linhas.length; i++) {
-        let linhaOriginal = linhas[i];
-        let linhaClean = linhaOriginal.trim();
+            for (let i = 0; i < linhas.length; i++) {
+                let linhaOriginal = linhas[i];
+                let linhaClean = linhaOriginal.trim();
 
-        // 2) DETECTOR E PROCESSADOR DE TABELA INDEPENDENTE (Preserva a posição exata)
-        if (/^[tT]\d+\./.test(linhaClean) || /^[tT]\.[0-9]/.test(linhaClean)) {
-            if (!emTabela) {
-                emTabela = true;
-                blocoTabelaHtml = '<table style="width: 100%; border-collapse: collapse; margin: 15px 0;">';
+                // 2) PROCESSADOR DE TABELAS PARSE SEQUENCIAL (T0. / T1.)
+                if (/^[tT]\d+\./.test(linhaClean) || /^[tT]\.[0-9]/.test(linhaClean)) {
+                    if (!emTabela) {
+                        emTabela = true;
+                        blocoTabelaHtml = '<table>';
+                    }
+
+                    const ehCabecalho = /0/.test(linhaClean.split(/\s+/)[0]);
+                    const tagCelula = ehCabecalho ? 'th' : 'td';
+
+                    // Isola e limpa os dados removendo o marcador
+                    let conteudoLinha = linhaClean.replace(/^[tT]\d+\.\s*|^[tT]\.\d+\s*/i, '');
+                    const colunas = conteudoLinha.split('|');
+                    
+                    blocoTabelaHtml += '<tr>';
+                    colunas.forEach(col => {
+                        blocoTabelaHtml += `<${tagCelula}>${col.trim()}</${tagCelula}>`;
+                    });
+                    blocoTabelaHtml += '</tr>';
+
+                    linhas[i] = ''; 
+                    continue;
+                } else {
+                    if (emTabela) {
+                        blocoTabelaHtml += '</table>';
+                        linhas[i] = blocoTabelaHtml + '<br>' + linhaOriginal;
+                        emTabela = false;
+                        blocoTabelaHtml = "";
+                    }
+                }
+
+                // 3) PARSER DE TÍTULOS E SUBTÍTULOS (Captura nível principal "1." e subníveis "1.1.")
+                if (/^\s*\d+(\.\d+)*\./.test(linhaClean)) {
+                    linhas[i] = linhaOriginal.replace(/^\s*(\d+(?:\.\d+)*\.)\s*(.+?)$/g, 
+                        '<div style="color: #C4974A; font-weight: bold; font-family: \'Cormorant Garamond\', serif; font-size: 21px; margin-top: 15px; margin-bottom: 10px;">$1 $2</div>');
+                    continue;
+                }
+
+                // 4) PARSER DE MARCADOR BULLET (*.)
+                if (/^\s*\*\.\s*/.test(linhaClean)) {
+                    linhas[i] = linhaOriginal.replace(/^\s*\*\.\s*(.+?)$/g, '<div class="custom-bullet">$1</div>');
+                    continue;
+                }
+
+                // 5) PARSER DE MARCADOR SETA (-.) - CORRIGIDO COMPATIBILIDADE GLOBAL
+                if (/^\s*\-\.\s*/.test(linhaClean)) {
+                    linhas[i] = linhaOriginal.replace(/^\s*\-\.\s*(.+?)$/g, '<div class="custom-arrow">$1</div>');
+                    continue;
+                }
             }
 
-            // Identifica se é linha de cabeçalho (T0. ou T.0) ou de dados
-            const ehCabecalho = /0/.test(linhaClean.split(/\s+/)[0]);
-            const tagCelula = ehCabecalho ? 'th' : 'td';
-
-            // Remove o marcador inicial (ex: T0. ou T.1) para isolar o conteúdo
-            let conteudoLinha = linhaClean.replace(/^[tT]\d+\.\s*|^[tT]\.\d+\s*/i, '');
-
-            // Divide as colunas usando o pipe "|"
-            const colunas = conteudoLinha.split('|');
-            
-            blocoTabelaHtml += '<tr>';
-            colunas.forEach(col => {
-                blocoTabelaHtml += `<${tagCelula}>${col.trim()}</${tagCelula}>`;
-            });
-            blocoTabelaHtml += '</tr>';
-
-            linhas[i] = ''; // Limpa a linha bruta original
-            continue;
-        } else {
-            // Se saiu da tabela, fecha a estrutura e injeta no ponto exato
             if (emTabela) {
                 blocoTabelaHtml += '</table>';
-                linhas[i] = blocoTabelaHtml + '<br>' + linhaOriginal;
-                emTabela = false;
-                blocoTabelaHtml = "";
+                linhas[linhas.length - 1] += blocoTabelaHtml;
             }
-        }
 
-        // 3) COBRE TÍTULOS PRINCIPAIS (1.) E SUBTÍTULOS (1.1., 1.2.3.) EM AMARELO E NEGRITO
-        if (/^\s*\d+(\.\d+)*\./.test(linhaClean)) {
-            linhas[i] = linhaOriginal.replace(/^\s*(\d+(?:\.\d+)*\.)\s*(.+?)$/g, 
-                '<div style="color: #C4974A; font-weight: bold; font-family: \'Cormorant Garamond\', serif; font-size: 21px; margin-top: 15px;">$1 $2</div>');
-            continue;
-        }
+            // Sanitização e formatação fina final
+            htmlProcessado = linhas.join('<br>');
+            htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
+            htmlProcessado = htmlProcessado.replace(/<br><div/g, '<div');
+            htmlProcessado = htmlProcessado.replace(/<\/div><br>/g, '</div>');
 
-        // 4) MARCADOR BULLET (*.)
-        if (/^\s*\*\.\s*/.test(linhaClean)) {
-            linhas[i] = linhaOriginal.replace(/^\s*\*\.\s*(.+?)$/g, '<div class="custom-bullet">$1</div>');
-            continue;
-        }
-
-        // 5) MARCADOR SETA (-.)
-        if (/^\s*\-\.\s*/.test(linhaClean)) {
-            linhas[i] = linhaOriginal.replace(/^\s*\-\.\s*(.+?)$/g, '<div class="custom-arrow">$1</div>');
-            continue;
-        }
-    }
-
-    // Se o texto terminar com uma tabela ativa, fecha a estrutura externa
-    if (emTabela) {
-        blocoTabelaHtml += '</table>';
-        linhas[linhas.length - 1] += blocoTabelaHtml;
-    }
-
-    // Junta as linhas novamente limpando espaçamentos duplicados residuais
-    htmlProcessado = linhas.join('<br>');
-    htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
-    htmlProcessado = htmlProcessado.replace(/<br><div/g, '<div');
-    htmlProcessado = htmlProcessado.replace(/<\/div><br>/g, '</div>');
-
-    return htmlProcessado;
-}       
+            return htmlProcessado;
+        }       
+        
         document.getElementById('btnRecuperar').addEventListener('click', function() {
             const email = document.getElementById('recuperarEmail').value.trim();
             if(!email) return alert("Por favor, digite seu e-mail.");
@@ -767,85 +768,11 @@
             .then(res => res.json())
             .then(res => {
                 if(res.success) {
-                    // DISPARO DO PROCESSAMENTO DE TRATAMENTO DO CONTEÚDO
                     const conteudoTratado = tratarSintaxeConteudo(res.conteudo);
-                    
                     document.getElementById('aulaConteudo').innerHTML = conteudoTratado;
                     document.getElementById('txtAnotacoes').value = res.anotacao || "";
-                    document.getElementById('statusSalvar').innerText = "✨ Sincronizado";
-
-                    const textoLimpo = document.getElementById('aulaConteudo').innerText;
-                    const totalPalavras = textoLimpo.split(/\s+/).length;
-                    const tempoMinutos = Math.max(1, Math.ceil(totalPalavras / 200));
-                    document.getElementById('tempoEstimado').innerText = `⏱️ Leitura: ${tempoMinutos} min`;
-
-                    const estaConcluida = localStorage.getItem(`concluida_${currentCursoId}_${currentAulaId}`) === 'true';
-                    const btnConcluir = document.getElementById('btnMarcarConcluido');
-                    if (estaConcluida) {
-                        btnConcluir.classList.add('active');
-                        btnConcluir.innerText = '✓ Concluído';
-                    } else {
-                        btnConcluir.classList.remove('active');
-                        btnConcluir.innerText = '✓ Marcar Concluído';
-                    }
-                    
                     document.getElementById('metaLeitura').style.display = 'flex';
-                } else {
-                    document.getElementById('aulaConteudo').innerHTML = `<p style="color:red;">${res.error || "Erro ao carregar o documento."}</p>`;
                 }
-            }).catch(() => {
-                document.getElementById('aulaConteudo').innerHTML = '<p style="color:red;">Erro fatal de conectividade na requisição do módulo.</p>';
-            });
-        }
-
-        function toggleConclusaoAula() {
-            if(!currentAulaId) return;
-            
-            const chave = `concluida_${currentCursoId}_${currentAulaId}`;
-            const estaConcluida = localStorage.getItem(chave) === 'true';
-            const btnConcluir = document.getElementById('btnMarcarConcluido');
-            const itemMenu = document.getElementById(`item-aula-${currentAulaId}`);
-            
-            if(estaConcluida) {
-                localStorage.setItem(chave, 'false');
-                btnConcluir.classList.remove('active');
-                btnConcluir.innerText = '✓ Marcar Concluído';
-                if(itemMenu) {
-                    const textoOriginal = itemMenu.querySelector('span').innerText;
-                    itemMenu.innerHTML = `<span>${textoOriginal}</span>`;
-                }
-            } else {
-                localStorage.setItem(chave, 'true');
-                btnConcluir.classList.add('active');
-                btnConcluir.innerText = '✓ Concluído';
-                if(itemMenu) {
-                    const textoOriginal = itemMenu.querySelector('span').innerText;
-                    itemMenu.innerHTML = `<span>${textoOriginal}</span> <span class="concluida-badge">✓</span>`;
-                }
-            }
-        }
-
-        document.getElementById('txtAnotacoes').addEventListener('input', () => {
-            document.getElementById('statusSalvar').innerText = "🔄 Gravando...";
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(salvarNotaRemota, 2000);
-        });
-
-        document.getElementById('btnSalvarNota').addEventListener('click', salvarNotaRemota);
-
-        function salvarNotaRemota() {
-            if(!currentAulaId) return;
-            const texto = document.getElementById('txtAnotacoes').value;
-            
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                body: JSON.stringify({
-                    action: "salvarAnotacao",
-                    idAmbiente: currentAmbiente,
-                    idCurso: currentCursoId,
-                    idAula: currentAulaId,
-                    idDoc: aula.idDoc // Nota: ajuste conforme a arquitetura da sua variável global
-                })
             });
         }
     </script>
