@@ -244,7 +244,7 @@
             margin-bottom: 28px;
         }
 
-        /* AJUSTE APENAS DA QUEBRA DO TEXTO (*.) */
+        /* AJUSTE VISUAL DA QUEBRA DO TEXTO (*.) */
         .custom-bullet {
             display: block;
             position: relative;
@@ -262,7 +262,7 @@
             font-size: 22px;
         }
 
-        /* AJUSTE APENAS DA QUEBRA DO TEXTO (-.) */
+        /* AJUSTE VISUAL DA QUEBRA DO TEXTO (-.) */
         .custom-arrow {
             display: block;
             position: relative;
@@ -495,7 +495,7 @@
     <div class="modal-upgrade" id="modalUpgrade">
         <h2 style="margin-bottom: 10px;">Conteúdo Exclusivo 👑</h2>
         <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 20px;">Esta aula faz parte do plano corporativo completo. Faça o upgrade agora para destravar todos os módulos estratégicos sem restrições.</p>
-        <button onclick="window.open(URL_ASAAS_UPGRADE, '_blank')", style="width:100%; padding:12px; background: var(--dourado-principal); color: var(--fundo-principal);">Desbloquear Agora</button>
+        <button onclick="window.open(URL_ASAAS_UPGRADE, '_blank')" style="width:100%; padding:12px; background: var(--dourado-principal); color: var(--fundo-principal);">Desbloquear Agora</button>
         <span class="link-recuperar" style="margin-top: 15px;" onclick="fecharModalUpgrade()">Continuar lendo o material gratuito</span>
     </div>
 
@@ -666,7 +666,7 @@
                 linhas[linhas.length - 1] += blocoTabelaHtml;
             }
 
-            htmlProcessado = linhas.join('<br>');
+            htmlProcessado = lines = linhas.join('<br>');
             htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
             htmlProcessado = htmlProcessado.replace(/<br><div/g, '<div');
             htmlProcessado = htmlProcessado.replace(/<\/div><br>/g, '</div>');
@@ -884,4 +884,69 @@
                     minutesAulasCache[`${currentCursoId}_${currentAulaId}`] = tempoEstimado;
                     atualizarBarraProgresso(currentCursoId);
 
-                    document.getElementById('txtAnotacoes').value =
+                    document.getElementById('txtAnotacoes').value = res.anotacao || "";
+                    atualizarStatusBotaoConcluido();
+                } else {
+                    document.getElementById('aulaConteudo').innerHTML = `<b style='color:#E74C3C;'>Erro ao carregar o conteúdo do documento.</b><br><small>${res.error || 'Verifique as permissões do Google Doc e se o ID está correto.'}</small>`;
+                }
+            }).catch((err) => {
+                document.getElementById('aulaConteudo').innerHTML = "<b style='color:#E74C3C;'>Erro de comunicação com o ecossistema central.</b>";
+                console.error(err);
+            });
+        }
+
+        function atualizarStatusBotaoConcluido() {
+            const btn = document.getElementById('btnMarcarConcluido');
+            const estaConcluida = localStorage.getItem(`concluida_${currentCursoId}_${currentAulaId}`) === 'true';
+            if(estaConcluida) {
+                btn.classList.add('active');
+                btn.innerText = "✓ Aula Concluída";
+            } else {
+                btn.classList.remove('active');
+                btn.innerText = "✓ Marcar Concluído";
+            }
+        }
+
+        function toggleConclusaoAula() {
+            const chave = `concluida_${currentCursoId}_${currentAulaId}`;
+            const statusAtual = localStorage.getItem(chave) === 'true';
+            localStorage.setItem(chave, !statusAtual);
+            
+            atualizarStatusBotaoConcluido();
+            renderizarAulas(currentCursoId);
+        }
+
+        function salvarAnotacaoRemota() {
+            if(!currentAulaId) return;
+            const anotacao = document.getElementById('txtAnotacoes').value;
+            const status = document.getElementById('statusSalvar');
+            status.innerText = "⏳ Sincronizando...";
+            
+            fetch(`${SCRIPT_URL}`, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    action: 'salvarAnotacao',
+                    idAmbiente: currentAmbiente,
+                    idCurso: currentCursoId,
+                    idAula: currentAulaId,
+                    anotacao: anotacao
+                })
+            }).then(() => {
+                status.innerText = "✨ Insights Sincronizados";
+            }).catch(() => {
+                status.innerText = "❌ Erro ao salvar";
+            });
+        }
+
+        document.getElementById('txtAnotacoes').addEventListener('input', () => {
+            clearTimeout(saveTimeout);
+            document.getElementById('statusSalvar').innerText = "✍️ Editando...";
+            saveTimeout = setTimeout(salvarAnotacaoRemota, 2000);
+        });
+
+        document.getElementById('btnSalvarNota').addEventListener('click', salvarAnotacaoRemota);
+    </script>
+</body>
+</html>
