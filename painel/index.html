@@ -219,6 +219,11 @@
             border-color: #2ECC71;
         }
         
+        @keyframes fadeInConteudo {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .conteudo-aula-dinamico {
             font-family: 'Lora', serif;
             font-size: 16px;
@@ -226,6 +231,7 @@
             text-align: justify;
             line-height: 1.8;
             word-break: break-word;
+            animation: fadeInConteudo 0.4s ease-out;
         }
 
         .conteudo-aula-dinamico h1, .conteudo-aula-dinamico h2, .conteudo-aula-dinamico h3 {
@@ -288,20 +294,21 @@
             font-size: 14px;
             background: #FFFFFF;
             font-family: 'DM Sans', sans-serif;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
             table-layout: fixed;
         }
         .conteudo-aula-dinamico th, .conteudo-aula-dinamico td {
             border: 1px solid #CBD5E1;
-            padding: 12px 14px;
+            padding: 14px 16px;
             text-align: left;
             word-wrap: break-word;
             vertical-align: top;
         }
         .conteudo-aula-dinamico th {
-            background-color: #475569 !important; 
-            color: #FFFFFF !important; 
+            background-color: var(--fundo-terciario) !important; 
+            color: var(--dourado-principal) !important; 
             font-weight: bold !important;
+            border-bottom: 2px solid var(--dourado-principal) !important;
         }
         
         .conteudo-aula-dinamico th:first-child, .conteudo-aula-dinamico td:first-child {
@@ -313,6 +320,86 @@
             background-color: #F8FAFC;
         }
 
+        /* COMPONENTES FLUTUANTES DAS REDES SOCIAIS */
+        .social-floating-dock {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 990;
+        }
+
+        .social-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease, filter 0.2s ease;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+        }
+        .social-btn:hover { transform: scale(1.08); filter: brightness(1.1); }
+        
+        .btn-whatsapp { background-color: #25D366; }
+        .btn-linkedin { background-color: #0077B5; }
+        .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        
+        .social-btn svg { width: 22px; height: 22px; fill: #FFFFFF; }
+
+        .wa-box-modal {
+            display: none;
+            position: fixed;
+            bottom: 85px;
+            left: 25px;
+            background-color: var(--fundo-secundario);
+            border: 1px solid var(--bordas);
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 991;
+            width: 300px;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .wa-box-modal.open { display: block; animation: fadeInConteudo 0.2s ease-out; }
+        .wa-box-modal h4 { margin-bottom: 12px; font-size: 16px; font-family: 'Cormorant Garamond', serif; color: var(--dourado-principal); font-weight: bold; }
+        
+        .wa-field {
+            width: 100%;
+            background-color: var(--fundo-terciario);
+            border: 1px solid var(--bordas);
+            color: var(--texto-principal);
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+        }
+        .wa-field:focus { outline: none; border-color: var(--dourado-principal); }
+        textarea.wa-field { height: 90px; resize: none; }
+        
+        .wa-btn-submit {
+            width: 100%;
+            background-color: #25D366;
+            color: #FFFFFF;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+        }
+        .wa-btn-submit:hover { background-color: #20ba5a; }
+
+        /* POST-IT & LOGIN COMPONENTES */
         .post-it-nota {
             background-color: #FEF5B1;
             width: 100%;
@@ -450,17 +537,13 @@
                 box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             }
 
-            .notes-panel.open {
-                display: flex !important;
-            }
-
-            .floating-note-btn {
-                display: flex;
-            }
-
-            .modal-backdrop.open {
-                display: block;
-            }
+            .notes-panel.open { display: flex !important; }
+            .floating-note-btn { display: flex; }
+            .modal-backdrop.open { display: block; }
+            
+            .social-floating-dock { bottom: 20px; left: 20px; gap: 10px; }
+            .social-btn { width: 42px; height: 42px; }
+            .wa-box-modal { bottom: 75px; left: 20px; width: 280px; }
         }
     </style>
 </head>
@@ -491,6 +574,29 @@
         <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 20px;">Esta aula faz parte do plano corporativo completo. Faça o upgrade agora para destravar todos os módulos estratégicos sem restrições.</p>
         <button onclick="window.open(URL_ASAAS_UPGRADE, '_blank')" style="width:100%; padding:12px; background: var(--dourado-principal); color: var(--fundo-principal);">Desbloquear Agora</button>
         <span class="link-recuperar" style="margin-top: 15px;" onclick="fecharModalUpgrade()">Continuar lendo o material gratuito</span>
+    </div>
+
+    <div class="social-floating-dock">
+        <div class="wa-box-modal" id="waModal">
+            <h4>Canal de Suporte Executivo</h4>
+            <select id="waTipo" class="wa-field">
+                <option value="Dúvida">❓ Dúvida sobre o conteúdo</option>
+                <option value="Sugestão">💡 Sugestão de melhoria</option>
+                <option value="Crítica">📢 Crítica / Feedback</option>
+            </select>
+            <textarea id="waMensagem" class="wa-field" placeholder="Escreva sua mensagem aqui detalhadamente..."></textarea>
+            <button class="wa-btn-submit" onclick="enviarMensagemWhatsApp()">Disparar via WhatsApp</button>
+        </div>
+
+        <button class="social-btn btn-whatsapp" onclick="toggleWhatsAppBox(event)" title="Suporte via WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.457L0 24zm6.59-3.859c1.63.968 3.434 1.48 5.275 1.481 5.466 0 9.913-4.441 9.916-9.913.002-2.651-1.02-5.144-2.878-7.004-1.857-1.858-4.351-2.88-7.001-2.881-5.47 0-9.917 4.441-9.92 9.914-.001 1.892.494 3.739 1.433 5.348L1.508 22.23l4.139-1.089zm11.336-7.391c-.328-.164-1.94-.959-2.268-1.079-.328-.12-.567-.181-.806.164-.238.346-.927 1.167-1.134 1.396-.208.23-.417.26-.745.096-.328-.164-1.386-.511-2.641-1.629-.977-.872-1.637-1.95-1.828-2.279-.191-.33-.02-.508.145-.671.149-.147.328-.385.493-.578.164-.193.219-.329.328-.55.11-.219.055-.411-.028-.574-.082-.164-.806-1.941-1.105-2.663-.291-.703-.588-.609-.806-.62-.208-.009-.447-.01-.686-.01-.239 0-.626.089-.953.447-.328.356-1.253 1.222-1.253 2.98 0 1.758 1.282 3.456 1.461 3.692.179.237 2.525 3.856 6.115 5.41.854.37 1.52.592 2.039.757.859.273 1.642.235 2.259.143.688-.102 1.94-.794 2.212-1.52.273-.727.273-1.352.191-1.482-.081-.13-.298-.21-.626-.374z"/></svg>
+        </button>
+        <a id="lnkLinkedin" href="#" target="_blank" class="social-btn btn-linkedin" title="Acessar LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        </a>
+        <a id="lnkInstagram" href="#" target="_blank" class="social-btn btn-instagram" title="Acessar Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
     </div>
 
     <header>
@@ -547,6 +653,11 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby6nf5lgvSTCtX2n4kNKaQHqfJtv9QvtjJGgBMcmrtLpGybae7eLb5vlDm06bzrxgF2DA/exec";
         const URL_ASAAS_UPGRADE = "https://www.asaas.com/c/seu-link-de-assinatura-aqui"; 
 
+        // CONFIGURAÇÕES DOS CANAIS COMPLEMENTARES (Ajuste aqui)
+        const WHATSAPP_NUMERO = "5511999999999"; // Inclua DDI (55) + DDD + Número completo
+        const LINK_LINKEDIN = "https://www.linkedin.com/company/seu-perfil";
+        const LINK_INSTAGRAM = "https://www.instagram.com/seu-perfil";
+
         let currentAmbiente = "";
         let restricoesPlano = null;
         let dbCursos = [];
@@ -554,6 +665,10 @@
         let currentAulaId = "";
         let saveTimeout;
         let minutosAulasCache = {};
+
+        // Inicialização dos links estáticos de redes
+        document.getElementById('lnkLinkedin').href = LINK_LINKEDIN;
+        document.getElementById('lnkInstagram').href = LINK_INSTAGRAM;
 
         function toggleMobileNote() {
             if (window.innerWidth <= 900) {
@@ -573,6 +688,42 @@
             }
         }
 
+        // Funções para controle do modal interativo do WhatsApp
+        function toggleWhatsAppBox(event) {
+            event.stopPropagation();
+            document.getElementById('waModal').classList.toggle('open');
+        }
+
+        function fecharWhatsAppBox() {
+            document.getElementById('waModal').classList.remove('open');
+        }
+
+        function enviarMensagemWhatsApp() {
+            const tipo = document.getElementById('waTipo').value;
+            const mensagem = document.getElementById('waMensagem').value.trim();
+            
+            if(!mensagem) {
+                alert("Por favor, digite sua mensagem antes de prosseguir.");
+                return;
+            }
+            
+            const textoFormatado = `Olá! Estou enviando uma *${tipo}* direto da minha Mesa Executiva Saber⁺:\n\n${mensagem}`;
+            const urlFinal = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMERO}&text=${encodeURIComponent(textoFormatado)}`;
+            
+            window.open(urlFinal, '_blank');
+            document.getElementById('waMensagem').value = "";
+            fecharWhatsAppBox();
+        }
+
+        // Fechamento de modais flutuantes ao clicar fora deles
+        document.addEventListener('click', function(e) {
+            const waBox = document.getElementById('waModal');
+            const btnWa = document.querySelector('.btn-whatsapp');
+            if (waBox && waBox.classList.contains('open') && !waBox.contains(e.target) && !btnWa.contains(e.target)) {
+                fecharWhatsAppBox();
+            }
+        });
+
         function abrirModalUpgrade() {
             document.getElementById('modalUpgrade').classList.add('open');
             document.getElementById('upgradeBackdrop').classList.add('open');
@@ -588,11 +739,14 @@
             document.getElementById('boxRecuperar').style.display = mostrarRecuperar ? 'block' : 'none';
         }
 
-        // MOTOR DE TRATAMENTO DE TEXTO TOTALMENTE CORRIGIDO
+        // MOTOR DE TRATAMENTO DE TEXTO TOTALMENTE OPTIMIZADO COM SUPORTE GLOBAL A **NEGRITO**
         function tratarSintaxeConteudo(textoBruto) {
             if (!textoBruto) return "";
             
-            let htmlProcessado = textoBruto.replace(/\n/g, '<br>');
+            // Tratamento global para converter **texto** em negrito HTML válido
+            let textoComNegrito = textoBruto.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            let htmlProcessado = textoComNegrito.replace(/\n/g, '<br>');
             const linhas = htmlProcessado.split('<br>');
             
             let emTabela = false;
@@ -637,7 +791,6 @@
                     continue;
                 }
 
-                // Processamento corrigido do Marcador de Lista (*.)
                 if (/^\s*\*\.\s*/.test(linhaClean)) {
                     let conteudo = linhaClean.replace(/^\s*\*\.\s*/, '');
                     if (conteudo.includes(':')) {
@@ -647,7 +800,6 @@
                     continue;
                 }
 
-                // Processamento corrigido da Seta (-.)
                 if (/^\s*\-\.\s*/.test(linhaClean)) {
                     let conteudo = linhaClean.replace(/^\s*\-\.\s*/, '');
                     if (conteudo.includes(':')) {
@@ -663,7 +815,6 @@
                 linhas[linhas.length - 1] += blocoTabelaHtml;
             }
 
-            // CORREÇÃO CRÍTICA: Variável corrigida de 'lines' para 'linhas'
             htmlProcessado = linhas.join('<br>');
             htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
             htmlProcessado = htmlProcessado.replace(/<br><div/g, '<div');
