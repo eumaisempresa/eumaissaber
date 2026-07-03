@@ -759,22 +759,56 @@
         }
 
         function exibirAula(aula) {
-            currentAulaId = aula.idAula;
-            document.getElementById('aulaTitulo').innerText = aula.tituloAula;
-            document.getElementById('aulaConteudo').innerHTML = "<em>Carregando conteúdo executivo...</em>";
-            document.getElementById('metaLeitura').style.display = 'none';
+    currentAulaId = aula.idAula;
+    document.getElementById('aulaTitulo').innerText = aula.tituloAula;
+    document.getElementById('aulaConteudo').innerHTML = "<em>Carregando conteúdo executivo...</em>";
+    document.getElementById('metaLeitura').style.display = 'none';
+    
+    // CAPTURA PREVENTIVA: Garante o ID do documento mesmo se a propriedade variar de nome na planilha
+    const idDoDocumento = aula.idDoc || aula.idDocumento || aula.idGoogleDoc || aula.linkDoc;
+    
+    if (!idDoDocumento || idDoDocumento === "undefined") {
+        document.getElementById('aulaConteudo').innerHTML = "<b style='color:#E74C3C;'>Erro: O ID do Google Doc não foi encontrado para esta aula na planilha de Cursos.</b>";
+        return;
+    }
+    
+    fetch(`${SCRIPT_URL}?action=carregarAula&idAmbiente=${currentAmbiente}&idCurso=${currentCursoId}&idAula=${currentAulaId}&idDoc=${idDoDocumento}`)
+    .then(res => res.json())
+    .then(res => {
+        if(res.success) {
+            const conteudoTratado = tratarSintaxeConteudo(res.conteudo);
+            document.getElementById('aulaConteudo').innerHTML = conteudoTratado;
+            document.getElementById('metaLeitura').style.display = 'flex';
             
-            fetch(`${SCRIPT_URL}?action=carregarAula&idAmbiente=${currentAmbiente}&idCurso=${currentCursoId}&idAula=${currentAulaId}&idDoc=${aula.idDoc}`)
-            .then(res => res.json())
-            .then(res => {
-                if(res.success) {
-                    const conteudoTratado = tratarSintaxeConteudo(res.conteudo);
-                    document.getElementById('aulaConteudo').innerHTML = conteudoTratado;
-                    document.getElementById('txtAnotacoes').value = res.anotacao || "";
-                    document.getElementById('metaLeitura').style.display = 'flex';
-                }
-            });
+            // Calcula o tempo estimado de leitura baseado em ~150 palavras por minuto
+            const contagemPalavras = res.conteudo.split(/\s+/).length;
+            const tempoEstimado = Math.max(1, Math.ceil(contagemPalavras / 150));
+            document.getElementById('tempoEstimado').innerText = `⏱️ Leitura: ${tempoEstimado} min`;
+            
+            // Atualiza as anotações do caderno de insights salvas anteriormente
+            document.getElementById('txtAnotacoes').value = res.anotacao || "";
+            
+            // Ajusta o botão de conclusão do aluno
+            atualizarStatusBotaoConcluido();
+        } else {
+            document.getElementById('aulaConteudo').innerHTML = `<b style='color:#E74C3C;'>Erro ao carregar o conteúdo do documento.</b><br><small>${res.error || 'Verifique as permissões do Google Doc e se o ID está correto.'}</small>`;
         }
-    </script>
-</body>
+    }).catch((err) => {
+        document.getElementById('aulaConteudo').innerHTML = "<b style='color:#E74C3C;'>Erro de comunicação com o ecossistema central.</b>";
+        console.error(err);
+    });
+}
+
+// FUNÇÃO AUXILIAR PARA COMPLETAR O SCRIPT SEU QUE ESTAVA CORTADO
+function atualizarStatusBotaoConcluido() {
+    const btn = document.getElementById('btnMarcarConcluido');
+    const estaConcluida = localStorage.getItem(`concluida_${currentCursoId}_${currentAulaId}`) === 'true';
+    if(estaConcluida) {
+        btn.classList.add('active');
+        btn.innerText = "✓ Aula Concluída";
+    } else {
+        btn.classList.remove('active');
+        btn.innerText = "✓ Marcar Concluído";
+    }
+}
 </html>
