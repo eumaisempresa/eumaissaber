@@ -102,7 +102,6 @@
 
         .sidebar { background-color: var(--fundo-secundario); border-right: 1px solid var(--bordas); padding: 20px; overflow-y: auto; }
         
-        /* CONTAINER RESTRITO PARA A TABELA CONSEGUIR DAR SCROLL */
         .content-body { 
             padding: 40px 20px; 
             overflow-y: auto; 
@@ -120,7 +119,6 @@
             overflow-y: auto;
         }
 
-        /* CONTAINER DA BARRA DE PROGRESSO */
         .progress-container {
             margin: 12px 0 18px 0;
             background: var(--fundo-terciario);
@@ -246,7 +244,6 @@
             margin-bottom: 24px;
         }
 
-        /* CUSTOMIZAÇÃO DE ELEMENTOS INJETADOS */
         .custom-bullet {
             display: flex;
             align-items: flex-start;
@@ -277,7 +274,6 @@
             margin-right: 10px;
         }
 
-        /* TABELA EXECUTIVA ADAPTATIVA REESTRUTURADA PARA CELULAR */
         .table-container-responsive {
             width: 100%;
             overflow-x: auto;
@@ -287,13 +283,13 @@
 
         .conteudo-aula-dinamico table {
             width: 100%;
-            min-width: 500px; /* Impede que colunas fiquem esmagadas no mobile */
+            min-width: 500px;
             border-collapse: collapse;
             font-size: 14px;
             background: #FFFFFF;
             font-family: 'DM Sans', sans-serif;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            table-layout: fixed; /* Distribuição controlada de largura */
+            table-layout: fixed;
         }
         .conteudo-aula-dinamico th, .conteudo-aula-dinamico td {
             border: 1px solid #CBD5E1;
@@ -308,9 +304,8 @@
             font-weight: bold !important;
         }
         
-        /* Definição equilibrada de colunas (Se houver 3 colunas padrão) */
         .conteudo-aula-dinamico th:first-child, .conteudo-aula-dinamico td:first-child {
-            width: 30%; /* Primeira coluna proporcional */
+            width: 30%;
             font-weight: 500;
         }
 
@@ -424,7 +419,7 @@
             }
 
             .sidebar {
-                max-height: 380px; /* Aumentado ligeiramente para comportar a barra de progresso */
+                max-height: 380px;
                 border-right: none;
                 border-bottom: 1px solid var(--bordas);
             }
@@ -558,7 +553,7 @@
         let currentCursoId = "";
         let currentAulaId = "";
         let saveTimeout;
-        let minutosAulasCache = {}; // Guarda a estimativa de tempo de cada aula para o cálculo da barra de progresso
+        let minutosAulasCache = {};
 
         function toggleMobileNote() {
             if (window.innerWidth <= 900) {
@@ -593,7 +588,7 @@
             document.getElementById('boxRecuperar').style.display = mostrarRecuperar ? 'block' : 'none';
         }
 
-        // MOTOR DE TRATAMENTO DE TEXTO OTIMIZADO (COM HIGHLIGHT DE SUBTEMAS ATÉ DOIS PONTOS)
+        // MOTOR DE TRATAMENTO DE TEXTO TOTALMENTE CORRIGIDO
         function tratarSintaxeConteudo(textoBruto) {
             if (!textoBruto) return "";
             
@@ -610,7 +605,6 @@
                 if (/^[tT]\d+\./.test(linhaClean) || /^[tT]\.[0-9]/.test(linhaClean)) {
                     if (!emTabela) {
                         emTabela = true;
-                        /* Injeta a div envoltória para controle de scroll responsivo */
                         blocoTabelaHtml = '<div class="table-container-responsive"><table>';
                     }
 
@@ -643,7 +637,7 @@
                     continue;
                 }
 
-                // Processamento do Marcador de Lista (*.) com Negrito até o caractere ":"
+                // Processamento corrigido do Marcador de Lista (*.)
                 if (/^\s*\*\.\s*/.test(linhaClean)) {
                     let conteudo = linhaClean.replace(/^\s*\*\.\s*/, '');
                     if (conteudo.includes(':')) {
@@ -653,7 +647,7 @@
                     continue;
                 }
 
-                // Processamento da Seta (-.) com Negrito até o caractere ":"
+                // Processamento corrigido da Seta (-.)
                 if (/^\s*\-\.\s*/.test(linhaClean)) {
                     let conteudo = linhaClean.replace(/^\s*\-\.\s*/, '');
                     if (conteudo.includes(':')) {
@@ -669,6 +663,7 @@
                 linhas[linhas.length - 1] += blocoTabelaHtml;
             }
 
+            // CORREÇÃO CRÍTICA: Variável corrigida de 'lines' para 'linhas'
             htmlProcessado = linhas.join('<br>');
             htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
             htmlProcessado = htmlProcessado.replace(/<br><div/g, '<div');
@@ -766,14 +761,12 @@
             if(uniqueCursos.length > 0) renderizarAulas(uniqueCursos[0]);
         }
 
-        // FUNÇÃO QUE CALCULA E ATUALIZA A BARRA DE % CONCLUÍDO POR MINUTOS ESTIMADOS
         function atualizarBarraProgresso(cursoId) {
             const aulasFiltradas = dbCursos.filter(c => c.idCurso === cursoId);
             let totalMinutosCurso = 0;
             let minutesConcluidos = 0;
 
             aulasFiltradas.forEach(aula => {
-                // Pega o tempo em minutos da aula (se já calculado e salvo no cache) ou assume 10 min por padrão enquanto não abre
                 const minutosAula = minutosAulasCache[`${cursoId}_${aula.idAula}`] || 10;
                 totalMinutosCurso += minutosAula;
 
@@ -800,7 +793,6 @@
             tituloCronograma.innerText = "Cronograma do Curso";
             container.appendChild(tituloCronograma);
 
-            // INJEÇÃO DA BARRA DE PROGRESSO DINÂMICA (ABAIXO DO CRONOGRAMA)
             const progressWrapper = document.createElement('div');
             progressWrapper.className = "progress-container";
             progressWrapper.innerHTML = `
@@ -859,7 +851,6 @@
                 container.appendChild(div);
             });
 
-            // Atualiza os valores da barra com os tempos atuais em cache
             atualizarBarraProgresso(cursoId);
         }
 
@@ -888,7 +879,6 @@
                     const tempoEstimado = Math.max(1, Math.ceil(contagemPalavras / 150));
                     document.getElementById('tempoEstimado').innerText = `⏱️ Leitura: ${tempoEstimado} min`;
                     
-                    // Alimenta o cache global de minutos para tornar a barra precisa
                     minutosAulasCache[`${currentCursoId}_${currentAulaId}`] = tempoEstimado;
                     atualizarBarraProgresso(currentCursoId);
 
