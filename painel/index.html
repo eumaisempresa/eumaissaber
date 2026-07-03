@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Executivo - EU⁺ Saber</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Kalam:wght@300;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Kalam:wght@300;400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
 
         :root {
             --fundo-principal: #060E18;
@@ -177,69 +177,83 @@
             border-color: #2ECC71;
         }
         
-        /* ESTILOS DA CENTRAL DE CONTEÚDO AVANÇADO (HTML DO GOOGLE DOCS) */
+        /* 1) QUEBRA ELEGANTE E 2) FONTE DE LIVRO (LORA) */
         .conteudo-aula-dinamico {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 15px;
+            font-family: 'Lora', serif;
+            font-size: 16px;
             color: #1A2430;
             text-align: justify;
+            line-height: 1.75;
+            word-break: break-word;
         }
 
-        /* Títulos e Subtítulos importados do Docs */
         .conteudo-aula-dinamico h1, .conteudo-aula-dinamico h2, .conteudo-aula-dinamico h3 {
             font-family: 'Cormorant Garamond', serif;
             color: #0A3663;
-            margin-top: 18px;
-            margin-bottom: 6px;
+            margin-top: 24px;
+            margin-bottom: 12px;
             font-weight: 600;
-            line-height: 32px;
+            line-height: 1.3;
         }
-        .conteudo-aula-dinamico h1 { font-size: 22px; }
-        .conteudo-aula-dinamico h2 { font-size: 19px; }
-        .conteudo-aula-dinamico h3 { font-size: 17px; }
+        .conteudo-aula-dinamico h1 { font-size: 24px; }
+        .conteudo-aula-dinamico h2 { font-size: 21px; }
+        .conteudo-aula-dinamico h3 { font-size: 18px; }
 
-        /* Estilização Executiva para Tabelas */
-        .conteudo-aula-dinamico table {
-            width: 100% !important;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 13px;
+        .conteudo-aula-dinamico p {
+            margin-bottom: 16px;
+        }
+
+        /* CUSTOMIZAÇÃO DE ELEMENTOS INJETADOS */
+        .custom-bullet {
+            display: flex;
+            align-items: flex-start;
+            margin-left: 15px;
+            margin-bottom: 8px;
+        }
+        .custom-bullet::before {
+            content: "•";
+            color: #1A2430;
+            font-size: 24px;
             line-height: 20px;
+            margin-right: 12px;
+            display: inline-block;
+        }
+
+        .custom-arrow {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .custom-arrow::before {
+            content: "➔";
+            color: var(--dourado-principal);
+            margin-right: 10px;
+        }
+
+        /* TABELA EXECUTIVA ADAPTATIVA */
+        .conteudo-aula-dinamico table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 22px 0;
+            font-size: 14px;
             background: #FFFFFF;
+            font-family: 'DM Sans', sans-serif;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .conteudo-aula-dinamico th, .conteudo-aula-dinamico td {
-            border: 1px solid #CBD5E1 !important;
-            padding: 10px 12px;
+            border: 1px solid #CBD5E1;
+            padding: 12px 14px;
             text-align: left;
         }
         .conteudo-aula-dinamico th {
-            background-color: #F1F5F9 !important;
+            background-color: #F1F5F9;
             color: #0A3663;
             font-weight: 600;
         }
-
-        /* Ajuste de Imagens e Prints */
-        .conteudo-aula-dinamico img {
-            max-width: 100% !important;
-            height: auto !important;
-            border-radius: 4px;
-            margin: 18px 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            display: block;
-        }
-
-        /* Formatação de Listas (Marcadores e Numéricas) */
-        .conteudo-aula-dinamico ul, .conteudo-aula-dinamico ol {
-            padding-left: 24px;
-            margin: 12px 0;
-        }
-        .conteudo-aula-dinamico li {
-            margin-bottom: 4px;
-        }
-
-        /* Parágrafos vindos do Docs */
-        .conteudo-aula-dinamico p {
-            margin-bottom: 12px;
+        .conteudo-aula-dinamico tr:nth-child(even) {
+            background-color: #F8FAFC;
         }
 
         .post-it-nota {
@@ -418,7 +432,7 @@
     <div class="modal-upgrade" id="modalUpgrade">
         <h2 style="margin-bottom: 10px;">Conteúdo Exclusivo 👑</h2>
         <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 20px;">Esta aula faz parte do plano corporativo completo. Faça o upgrade agora para destravar todos os módulos estratégicos sem restrições.</p>
-        <button onclick="window.open(URL_ASAAS_UPGRADE, '_blank')" style="width:100%; padding:12px; background: var(--dourado-principal); color: var(--fundo-principal);">Desbloquear Agora</button>
+        <button onclick="window.open(URL_ASAAS_UPGRADE, '_blank')", style="width:100%; padding:12px; background: var(--dourado-principal); color: var(--fundo-principal);">Desbloquear Agora</button>
         <span class="link-recuperar" style="margin-top: 15px;" onclick="fecharModalUpgrade()">Continuar lendo o material gratuito</span>
     </div>
 
@@ -510,7 +524,83 @@
 
         function alternarTelas(mostrarRecuperar) {
             document.getElementById('boxLogin').style.display = mostrarRecuperar ? 'none' : 'block';
-            document.getElementById('boxRecuperar').style.display = mostrarRecuperar ? 'block' : 'none';
+            document.getElementById('boxRecuperar').style.display = mostrarRecRecover ? 'block' : 'none';
+        }
+
+        // FUNÇÃO DE TRATAMENTO DINÂMICO DE TEXTO (SINTAXE DO SEU PAINEL)
+        function tratarSintaxeConteudo(textoBruto) {
+            if (!textoBruto) return "";
+            
+            let htmlProcessado = textoBruto;
+
+            // 1) Garante que quebras de linha (\n) virem quebras nativas elegantes do HTML (<br>)
+            htmlProcessado = htmlProcessado.replace(/\n/g, '<br>');
+
+            // 3) Identificar Tabela: Procura ocorrências de "T0.X T0.Y \n T1.A T2.B" e monta a estrutura <table>
+            // Padrão adaptável baseado no seu exemplo estrutural
+            const linhas = htmlProcessado.split('<br>');
+            let emTabela = false;
+            let tabelaHtml = '<table>';
+
+            for (let i = 0; i < linhas.length; i++) {
+                let linhaClean = linhas[i].trim();
+                
+                if (linhaClean.startsWith('T0.') || linhaClean.startsWith('T1.') || linhaClean.startsWith('T2.')) {
+                    if (!emTabela) {
+                        emTabela = true;
+                    }
+                    
+                    // Quebra as colunas separadas por espaço
+                    const colunas = linhaClean.split(/\s+T\d+\./);
+                    // Corrige o primeiro elemento removendo a tag inicial (ex: T0.)
+                    colunas[0] = colunas[0].replace(/T\d+\./, '');
+
+                    tabelaHtml += '<tr>';
+                    colunas.forEach(col => {
+                        if(col.trim() !== "") {
+                            if (linhaClean.startsWith('T0.')) {
+                                tabelaHtml += `<th>${col.trim()}</th>`;
+                            } else {
+                                tabelaHtml += `<td>${col.trim()}</td>`;
+                            }
+                        }
+                    });
+                    tabelaHtml += '</tr>';
+                    
+                    // Remove a linha de texto processada para não duplicar
+                    linhas[i] = ''; 
+                } else {
+                    if (emTabela) {
+                        tabelaHtml += '</table>';
+                        // Injeta a tabela fechada logo antes da linha atual comum
+                        linhas[i] = tabelaHtml + '<br>' + linhas[i];
+                        emTabela = false;
+                        tabelaHtml = '<table>';
+                    }
+                }
+            }
+            if (emTabela) {
+                tabelaHtml += '</table>';
+                linhas[linhas.length - 1] += tabelaHtml;
+            }
+            htmlProcessado = linhas.join('<br>');
+
+            // 3) Identifica número com ponto (Ex: "1.", "1.1.") e coloca em Negrito
+            htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)(\d+(?:\.\d+)*\.)(\s+)/g, '<br><strong>$1</strong>$2');
+
+            // 3) Identifica letra com ponto (Ex: "a.", "b.") e coloca em Negrito
+            htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)([a-zA-Z]\.)(\s+)/g, '<br><strong>$1</strong>$2');
+
+            // 3) Identifica Marcador (*.) e converte no formato de lista elegante idêntico ao print
+            htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\*\.\s*([^\<]+)/g, '<div class="custom-bullet">$1</div>');
+
+            // 3) Identifica Marcador de seta (-.) e converte em componente executivo com seta
+            htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\-\.\s*([^\<]+)/g, '<div class="custom-arrow">$1</div>');
+
+            // Limpeza de quebras duplicadas causadas pelas remoções
+            htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
+
+            return htmlProcessado;
         }
 
         document.getElementById('btnRecuperar').addEventListener('click', function() {
@@ -668,18 +758,18 @@
             .then(res => res.json())
             .then(res => {
                 if(res.success) {
-                    // 1. Injeta o HTML nativo e limpo direto do Google Docs
-                    document.getElementById('aulaConteudo').innerHTML = res.conteudo;
+                    // DISPARO DO PROCESSAMENTO DE TRATAMENTO DO CONTEÚDO
+                    const conteudoTratado = tratarSintaxeConteudo(res.conteudo);
+                    
+                    document.getElementById('aulaConteudo').innerHTML = conteudoTratado;
                     document.getElementById('txtAnotacoes').value = res.anotacao || "";
                     document.getElementById('statusSalvar').innerText = "✨ Sincronizado";
 
-                    // 2. Cálculo Inteligente do Tempo Estimado de Leitura com base no HTML de texto gerado
                     const textoLimpo = document.getElementById('aulaConteudo').innerText;
                     const totalPalavras = textoLimpo.split(/\s+/).length;
                     const tempoMinutos = Math.max(1, Math.ceil(totalPalavras / 200));
                     document.getElementById('tempoEstimado').innerText = `⏱️ Leitura: ${tempoMinutos} min`;
 
-                    // 3. Alinha o estado do botão de conclusão
                     const estaConcluida = localStorage.getItem(`concluida_${currentCursoId}_${currentAulaId}`) === 'true';
                     const btnConcluir = document.getElementById('btnMarcarConcluido');
                     if (estaConcluida) {
@@ -745,10 +835,8 @@
                     idAmbiente: currentAmbiente,
                     idCurso: currentCursoId,
                     idAula: currentAulaId,
-                    texto: texto
+                    idDoc: aula.idDoc // Nota: ajuste conforme a arquitetura da sua variável global
                 })
-            }).then(() => {
-                document.getElementById('statusSalvar').innerText = "✨ Salvo no Post-it!";
             });
         }
     </script>
