@@ -224,15 +224,15 @@
             font-size: 16px;
             color: #1A2430;
             text-align: justify;
-            line-height: 1.8;
+            line-height: 28px;
             word-break: break-word;
         }
 
         .conteudo-aula-dinamico h1, .conteudo-aula-dinamico h2, .conteudo-aula-dinamico h3 {
             font-family: 'Cormorant Garamond', serif;
             color: #0A3663;
-            margin-top: 24px;
-            margin-bottom: 12px;
+            margin-top: 28px;
+            margin-bottom: 14px;
             font-weight: 600;
             line-height: 1.3;
         }
@@ -241,35 +241,37 @@
         .conteudo-aula-dinamico h3 { font-size: 18px; }
 
         .conteudo-aula-dinamico p {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
-        /* CORREÇÃO DO ESTILO DO MARCADOR (*.) - IMPEDE QUEBRA DE LINHA */
+        /* FIX DE QUEBRA NATIVA DO MARCADOR (*.) */
         .custom-bullet {
             position: relative;
-            padding-left: 25px;
-            margin-bottom: 14px;
+            padding-left: 20px;
+            margin-bottom: 0px;
             line-height: 28px;
-            display: block;
-            text-align: justify;
+            display: inline-block;
+            width: 100%;
+            text-align: left; /* Cancela o justify que separava o texto */
         }
         .custom-bullet::before {
             content: "•";
             position: absolute;
-            left: 5px;
+            left: 0px;
             top: 0px;
             color: #1A2430;
-            font-size: 20px;
+            font-size: 22px;
         }
 
-        /* AJUSTE DO ESTILO DA SETA (-.) PARA MANTER COMPATIBILIDADE NATIVA */
+        /* FIX DE QUEBRA NATIVA DA SETA (-.) */
         .custom-arrow {
             position: relative;
-            padding-left: 25px;
-            margin-bottom: 14px;
+            padding-left: 20px;
+            margin-bottom: 0px;
             line-height: 28px;
-            display: block;
-            text-align: justify;
+            display: inline-block;
+            width: 100%;
+            text-align: left; /* Cancela o justify que separava o texto */
         }
         .custom-arrow::before {
             content: "➔";
@@ -277,7 +279,7 @@
             left: 0px;
             top: 0px;
             color: var(--dourado-principal);
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .table-container-responsive {
@@ -559,7 +561,7 @@
         let currentCursoId = "";
         let currentAulaId = "";
         let saveTimeout;
-        let minutosAulasCache = {};
+        let minutesAulasCache = {};
 
         function toggleMobileNote() {
             if (window.innerWidth <= 900) {
@@ -769,7 +771,7 @@
             let minutesConcluidos = 0;
 
             aulasFiltradas.forEach(aula => {
-                const minutosAula = minutosAulasCache[`${cursoId}_${aula.idAula}`] || 10;
+                const minutosAula = minutesAulasCache[`${cursoId}_${aula.idAula}`] || 10;
                 totalMinutosCurso += minutosAula;
 
                 const estaConcluida = localStorage.getItem(`concluida_${cursoId}_${aula.idAula}`) === 'true';
@@ -881,7 +883,7 @@
                     const tempoEstimado = Math.max(1, Math.ceil(contagemPalavras / 150));
                     document.getElementById('tempoEstimado').innerText = `⏱️ Leitura: ${tempoEstimado} min`;
                     
-                    minutosAulasCache[`${currentCursoId}_${currentAulaId}`] = tempoEstimado;
+                    minutesAulasCache[`${currentCursoId}_${currentAulaId}`] = tempoEstimado;
                     atualizarBarraProgresso(currentCursoId);
 
                     document.getElementById('txtAnotacoes').value = res.anotacao || "";
