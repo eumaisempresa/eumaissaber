@@ -244,15 +244,14 @@
             margin-bottom: 28px;
         }
 
-        /* FIX DE QUEBRA NATIVA DO MARCADOR (*.) */
+        /* AJUSTE APENAS DA QUEBRA DO TEXTO (*.) */
         .custom-bullet {
+            display: block;
             position: relative;
             padding-left: 20px;
             margin-bottom: 0px;
             line-height: 28px;
-            display: inline-block;
-            width: 100%;
-            text-align: left; /* Cancela o justify que separava o texto */
+            text-align: left;
         }
         .custom-bullet::before {
             content: "•";
@@ -263,15 +262,14 @@
             font-size: 22px;
         }
 
-        /* FIX DE QUEBRA NATIVA DA SETA (-.) */
+        /* AJUSTE APENAS DA QUEBRA DO TEXTO (-.) */
         .custom-arrow {
+            display: block;
             position: relative;
             padding-left: 20px;
             margin-bottom: 0px;
             line-height: 28px;
-            display: inline-block;
-            width: 100%;
-            text-align: left; /* Cancela o justify que separava o texto */
+            text-align: left;
         }
         .custom-arrow::before {
             content: "➔";
@@ -497,7 +495,7 @@
     <div class="modal-upgrade" id="modalUpgrade">
         <h2 style="margin-bottom: 10px;">Conteúdo Exclusivo 👑</h2>
         <p style="color: var(--texto-secundario); font-size: 14px; margin-bottom: 20px;">Esta aula faz parte do plano corporativo completo. Faça o upgrade agora para destravar todos os módulos estratégicos sem restrições.</p>
-        <button onclick="window.open(URL_ASAAS_UPGRADE, '_blank')" style="width:100%; padding:12px; background: var(--dourado-principal); color: var(--fundo-principal);">Desbloquear Agora</button>
+        <button onclick="window.open(URL_ASAAS_UPGRADE, '_blank')", style="width:100%; padding:12px; background: var(--dourado-principal); color: var(--fundo-principal);">Desbloquear Agora</button>
         <span class="link-recuperar" style="margin-top: 15px;" onclick="fecharModalUpgrade()">Continuar lendo o material gratuito</span>
     </div>
 
@@ -537,7 +535,7 @@
 
         <div class="notes-panel" id="notesPanel">
             <h3 style="font-size: 18px; margin-bottom: 5px; text-align: center;">✍️ Caderno de Insights</h3>
-            <p style="color: var(--texto-secundario); font-size: 12px; text-align: center; margin-bottom: 5px;">Sincronização em nuvem activa</p>
+            <p style="color: var(--texto-secundario); font-size: 12px; text-align: center; margin-bottom: 5px;">Sincronização em nuvem ativa</p>
             
             <div class="post-it-nota">
                 <div class="post-it-alfinete"></div>
@@ -793,7 +791,7 @@
             container.innerHTML = "";
 
             const tituloCronograma = document.createElement('h4');
-            tituloCronograma.style = "color: var(--texto-secundario); margin-bottom: 5px; font-size: 12px; text-transform: uppercase;";
+            tituloCronograma.style = "color: var(--texto-secundario); margin-bottom: 15px; font-size: 12px; text-transform: uppercase;";
             tituloCronograma.innerText = "Cronograma do Curso";
             container.appendChild(tituloCronograma);
 
@@ -886,37 +884,4 @@
                     minutesAulasCache[`${currentCursoId}_${currentAulaId}`] = tempoEstimado;
                     atualizarBarraProgresso(currentCursoId);
 
-                    document.getElementById('txtAnotacoes').value = res.anotacao || "";
-                    atualizarStatusBotaoConcluido();
-                } else {
-                    document.getElementById('aulaConteudo').innerHTML = `<b style='color:#E74C3C;'>Erro ao carregar o conteúdo do documento.</b><br><small>${res.error || 'Verifique as permissões do Google Doc e se o ID está correto.'}</small>`;
-                }
-            }).catch((err) => {
-                document.getElementById('aulaConteudo').innerHTML = "<b style='color:#E74C3C;'>Erro de comunicação com o ecossistema central.</b>";
-                console.error(err);
-            });
-        }
-
-        function atualizarStatusBotaoConcluido() {
-            const btn = document.getElementById('btnMarcarConcluido');
-            const estaConcluida = localStorage.getItem(`concluida_${currentCursoId}_${currentAulaId}`) === 'true';
-            if(estaConcluida) {
-                btn.classList.add('active');
-                btn.innerText = "✓ Aula Concluída";
-            } else {
-                btn.classList.remove('active');
-                btn.innerText = "✓ Marcar Concluído";
-            }
-        }
-
-        function toggleConclusaoAula() {
-            const chave = `concluida_${currentCursoId}_${currentAulaId}`;
-            const statusAtual = localStorage.getItem(chave) === 'true';
-            localStorage.setItem(chave, !statusAtual);
-            
-            atualizarStatusBotaoConcluido();
-            renderizarAulas(currentCursoId);
-        }
-    </script>
-</body>
-</html>
+                    document.getElementById('txtAnotacoes').value =
