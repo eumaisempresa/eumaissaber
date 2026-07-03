@@ -533,10 +533,10 @@
     
     let htmlProcessado = textoBruto;
 
-    // 1) Garante que quebras de linha (\n) virem quebras nativas HTML (<br>)
+    // 1) Transforma quebras de linha nativas em tags <br>
     htmlProcessado = htmlProcessado.replace(/\n/g, '<br>');
 
-    // 2) Identificar Tabela (Suporta tanto maiúsculo T0 quanto minúsculo t0)
+    // 2) COMPILADOR DE TABELAS REVISADO (Gera linhas <tr> corretamente)
     const linhas = htmlProcessado.split('<br>');
     let emTabela = false;
     let tabelaHtml = '<table>';
@@ -544,21 +544,20 @@
     for (let i = 0; i < linhas.length; i++) {
         let linhaClean = linhas[i].trim();
         
-        // Verifica de forma insensível a maiúsculas/minúsculas (t0., t1., t2...)
         if (/^[tT]\d+\./.test(linhaClean)) {
             if (!emTabela) {
                 emTabela = true;
             }
             
-            // Divide as colunas baseando-se nos marcadores de tabela seguintes
-            const colunas = linhaClean.split(/\s+[tT]\d+\./);
-            // Remove o marcador da primeira coluna
-            colunas[0] = colunas[0].replace(/^[tT]\d+\./, '');
-
             tabelaHtml += '<tr>';
-            colunas.forEach(col => {
-                if(col.trim() !== "") {
-                    // Se for linha de cabeçalho (t0. ou T0.)
+            
+            // Quebra as colunas pelo padrão de marcadores (ex: separando Nome de Telefone)
+            // Se houver múltiplos dados na mesma linha separados por espaço + T1.
+            let partesColunas = linhaClean.split(/\s+[tT]\d+\./);
+            partesColunas[0] = partesColunas[0].replace(/^[tT]\d+\./, ''); // Limpa marcador inicial
+
+            partesColunas.forEach(col => {
+                if (col.trim() !== "") {
                     if (/^[tT]0\./.test(linhaClean)) {
                         tabelaHtml += `<th>${col.trim()}</th>`;
                     } else {
@@ -566,9 +565,9 @@
                     }
                 }
             });
-            tabelaHtml += '</tr>';
             
-            linhas[i] = ''; // Limpa a linha bruta para dar lugar à tabela estruturada
+            tabelaHtml += '</tr>';
+            linhas[i] = ''; // Limpa linha de texto original processada
         } else {
             if (emTabela) {
                 tabelaHtml += '</table>';
@@ -582,25 +581,27 @@
         tabelaHtml += '</table>';
         linhas[linhas.length - 1] += tabelaHtml;
     }
-    htmlProcessado = lines = linhas.join('<br>');
+    htmlProcessado = linhas.join('<br>');
 
-    // 3) Identifica número com ponto (Ex: "1.", "1.3.") com ou sem espaços antes, e aplica o Amarelo/Dourado Premium
-    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*(\d+(?:\.\d+)*\.)(\s+)/g, '<br><strong style="color: #C4974A;">$1</strong>$2');
+    // 3) LINHA INTEIRA DO TÍTULO NUMÉRICO EM NEGRITO E AMARELO (1.2., 1.3., etc)
+    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*(\d+(?:\.\d+)*\.)\s*([^\<]+|.+?)(?=\<br\>|$)/g, 
+        '<br><div style="color: #C4974A; font-weight: bold; font-family: \'Cormorant Garamond\', serif; font-size: 21px; margin-top: 15px;">$1 $2</div>');
 
-    // 4) Identifica letra com ponto (Ex: "a.", "b.") com ou sem espaços antes, e aplica o Amarelo/Dourado Premium
-    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*([a-zA-Z]\.)(\s+)/g, '<br><strong style="color: #C4974A;">$1</strong>$2');
+    // 4) COMPONENTE DE LETRAS LISTADAS (a., b., c.) PRESERVADO E FORMATADO EM AMARELO
+    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*([a-zA-Z]\.)\s*([^\<]+|.+?)(?=\<br\>|$)/g, 
+        '<br><div style="margin-left: 20px;"><strong style="color: #C4974A;">$1</strong> $2</div>');
 
-    // 5) Identifica Marcador (*.) de forma robusta (captura tudo até o final da linha, aceitando fórmulas e caracteres especiais)
+    // 5) MARCADOR BULLET (*.)
     htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*\*\.\s*([^\<]+|.+?)(?=\<br\>|$)/g, '<div class="custom-bullet">$1</div>');
 
-    // 6) Identifica Marcador de seta (-.) com suporte a espaços iniciais
+    // 6) MARCADOR SETA (-.)
     htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*\-\.\s*([^\<]+|.+?)(?=\<br\>|$)/g, '<div class="custom-arrow">$1</div>');
 
-    // Limpeza fina de quebras residuais duplicadas
+    // Limpeza de quebras órfãs
     htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
 
     return htmlProcessado;
-}      
+}       
         document.getElementById('btnRecuperar').addEventListener('click', function() {
             const email = document.getElementById('recuperarEmail').value.trim();
             if(!email) return alert("Por favor, digite seu e-mail.");
