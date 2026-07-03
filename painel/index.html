@@ -244,34 +244,40 @@
             margin-bottom: 24px;
         }
 
+        /* CORREÇÃO DO ESTILO DO MARCADOR (*.) - IMPEDE QUEBRA DE LINHA */
         .custom-bullet {
-            display: flex;
-            align-items: flex-start;
-            margin-left: 15px;
-            margin-bottom: 16px;
-            line-height: 1.8;
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 14px;
+            line-height: 28px;
+            display: block;
+            text-align: justify;
         }
         .custom-bullet::before {
             content: "•";
+            position: absolute;
+            left: 5px;
+            top: 0px;
             color: #1A2430;
-            font-size: 24px;
-            line-height: 20px;
-            margin-right: 12px;
-            display: inline-block;
+            font-size: 20px;
         }
 
+        /* AJUSTE DO ESTILO DA SETA (-.) PARA MANTER COMPATIBILIDADE NATIVA */
         .custom-arrow {
-            display: flex;
-            align-items: center;
-            margin-left: 10px;
-            margin-bottom: 16px;
-            line-height: 1.8;
-            font-weight: 500;
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 14px;
+            line-height: 28px;
+            display: block;
+            text-align: justify;
         }
         .custom-arrow::before {
             content: "➔";
+            position: absolute;
+            left: 0px;
+            top: 0px;
             color: var(--dourado-principal);
-            margin-right: 10px;
+            font-size: 16px;
         }
 
         .table-container-responsive {
@@ -588,7 +594,6 @@
             document.getElementById('boxRecuperar').style.display = mostrarRecuperar ? 'block' : 'none';
         }
 
-        // MOTOR DE TRATAMENTO DE TEXTO TOTALMENTE CORRIGIDO
         function tratarSintaxeConteudo(textoBruto) {
             if (!textoBruto) return "";
             
@@ -637,7 +642,6 @@
                     continue;
                 }
 
-                // Processamento corrigido do Marcador de Lista (*.)
                 if (/^\s*\*\.\s*/.test(linhaClean)) {
                     let conteudo = linhaClean.replace(/^\s*\*\.\s*/, '');
                     if (conteudo.includes(':')) {
@@ -647,7 +651,6 @@
                     continue;
                 }
 
-                // Processamento corrigido da Seta (-.)
                 if (/^\s*\-\.\s*/.test(linhaClean)) {
                     let conteudo = linhaClean.replace(/^\s*\-\.\s*/, '');
                     if (conteudo.includes(':')) {
@@ -663,7 +666,6 @@
                 linhas[linhas.length - 1] += blocoTabelaHtml;
             }
 
-            // CORREÇÃO CRÍTICA: Variável corrigida de 'lines' para 'linhas'
             htmlProcessado = linhas.join('<br>');
             htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
             htmlProcessado = htmlProcessado.replace(/<br><div/g, '<div');
@@ -772,7 +774,7 @@
 
                 const estaConcluida = localStorage.getItem(`concluida_${cursoId}_${aula.idAula}`) === 'true';
                 if (estaConcluida) {
-                    minutesConcluidos += minutosAula;
+                    minutesConcluidos += minutesAula;
                 }
             });
 
