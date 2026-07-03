@@ -529,80 +529,78 @@
 
         // FUNÇÃO DE TRATAMENTO DINÂMICO DE TEXTO (SINTAXE DO SEU PAINEL)
         function tratarSintaxeConteudo(textoBruto) {
-            if (!textoBruto) return "";
+    if (!textoBruto) return "";
+    
+    let htmlProcessado = textoBruto;
+
+    // 1) Garante que quebras de linha (\n) virem quebras nativas HTML (<br>)
+    htmlProcessado = htmlProcessado.replace(/\n/g, '<br>');
+
+    // 2) Identificar Tabela (Suporta tanto maiúsculo T0 quanto minúsculo t0)
+    const linhas = htmlProcessado.split('<br>');
+    let emTabela = false;
+    let tabelaHtml = '<table>';
+
+    for (let i = 0; i < linhas.length; i++) {
+        let linhaClean = linhas[i].trim();
+        
+        // Verifica de forma insensível a maiúsculas/minúsculas (t0., t1., t2...)
+        if (/^[tT]\d+\./.test(linhaClean)) {
+            if (!emTabela) {
+                emTabela = true;
+            }
             
-            let htmlProcessado = textoBruto;
+            // Divide as colunas baseando-se nos marcadores de tabela seguintes
+            const colunas = linhaClean.split(/\s+[tT]\d+\./);
+            // Remove o marcador da primeira coluna
+            colunas[0] = colunas[0].replace(/^[tT]\d+\./, '');
 
-            // 1) Garante que quebras de linha (\n) virem quebras nativas elegantes do HTML (<br>)
-            htmlProcessado = htmlProcessado.replace(/\n/g, '<br>');
-
-            // 3) Identificar Tabela: Procura ocorrências de "T0.X T0.Y \n T1.A T2.B" e monta a estrutura <table>
-            // Padrão adaptável baseado no seu exemplo estrutural
-            const linhas = htmlProcessado.split('<br>');
-            let emTabela = false;
-            let tabelaHtml = '<table>';
-
-            for (let i = 0; i < linhas.length; i++) {
-                let linhaClean = linhas[i].trim();
-                
-                if (linhaClean.startsWith('T0.') || linhaClean.startsWith('T1.') || linhaClean.startsWith('T2.')) {
-                    if (!emTabela) {
-                        emTabela = true;
-                    }
-                    
-                    // Quebra as colunas separadas por espaço
-                    const colunas = linhaClean.split(/\s+T\d+\./);
-                    // Corrige o primeiro elemento removendo a tag inicial (ex: T0.)
-                    colunas[0] = colunas[0].replace(/T\d+\./, '');
-
-                    tabelaHtml += '<tr>';
-                    colunas.forEach(col => {
-                        if(col.trim() !== "") {
-                            if (linhaClean.startsWith('T0.')) {
-                                tabelaHtml += `<th>${col.trim()}</th>`;
-                            } else {
-                                tabelaHtml += `<td>${col.trim()}</td>`;
-                            }
-                        }
-                    });
-                    tabelaHtml += '</tr>';
-                    
-                    // Remove a linha de texto processada para não duplicar
-                    linhas[i] = ''; 
-                } else {
-                    if (emTabela) {
-                        tabelaHtml += '</table>';
-                        // Injeta a tabela fechada logo antes da linha atual comum
-                        linhas[i] = tabelaHtml + '<br>' + linhas[i];
-                        emTabela = false;
-                        tabelaHtml = '<table>';
+            tabelaHtml += '<tr>';
+            colunas.forEach(col => {
+                if(col.trim() !== "") {
+                    // Se for linha de cabeçalho (t0. ou T0.)
+                    if (/^[tT]0\./.test(linhaClean)) {
+                        tabelaHtml += `<th>${col.trim()}</th>`;
+                    } else {
+                        tabelaHtml += `<td>${col.trim()}</td>`;
                     }
                 }
-            }
+            });
+            tabelaHtml += '</tr>';
+            
+            linhas[i] = ''; // Limpa a linha bruta para dar lugar à tabela estruturada
+        } else {
             if (emTabela) {
                 tabelaHtml += '</table>';
-                linhas[linhas.length - 1] += tabelaHtml;
+                linhas[i] = tabelaHtml + '<br>' + linhas[i];
+                emTabela = false;
+                tabelaHtml = '<table>';
             }
-            htmlProcessado = linhas.join('<br>');
-
-            // 3) Identifica número com ponto (Ex: "1.", "1.1.") e coloca em Negrito
-            htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)(\d+(?:\.\d+)*\.)(\s+)/g, '<br><strong>$1</strong>$2');
-
-            // 3) Identifica letra com ponto (Ex: "a.", "b.") e coloca em Negrito
-            htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)([a-zA-Z]\.)(\s+)/g, '<br><strong>$1</strong>$2');
-
-            // 3) Identifica Marcador (*.) e converte no formato de lista elegante idêntico ao print
-            htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\*\.\s*([^\<]+)/g, '<div class="custom-bullet">$1</div>');
-
-            // 3) Identifica Marcador de seta (-.) e converte em componente executivo com seta
-            htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\-\.\s*([^\<]+)/g, '<div class="custom-arrow">$1</div>');
-
-            // Limpeza de quebras duplicadas causadas pelas remoções
-            htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
-
-            return htmlProcessado;
         }
+    }
+    if (emTabela) {
+        tabelaHtml += '</table>';
+        linhas[linhas.length - 1] += tabelaHtml;
+    }
+    htmlProcessado = lines = linhas.join('<br>');
 
+    // 3) Identifica número com ponto (Ex: "1.", "1.3.") com ou sem espaços antes, e aplica o Amarelo/Dourado Premium
+    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*(\d+(?:\.\d+)*\.)(\s+)/g, '<br><strong style="color: #C4974A;">$1</strong>$2');
+
+    // 4) Identifica letra com ponto (Ex: "a.", "b.") com ou sem espaços antes, e aplica o Amarelo/Dourado Premium
+    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*([a-zA-Z]\.)(\s+)/g, '<br><strong style="color: #C4974A;">$1</strong>$2');
+
+    // 5) Identifica Marcador (*.) de forma robusta (captura tudo até o final da linha, aceitando fórmulas e caracteres especiais)
+    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*\*\.\s*([^\<]+|.+?)(?=\<br\>|$)/g, '<div class="custom-bullet">$1</div>');
+
+    // 6) Identifica Marcador de seta (-.) com suporte a espaços iniciais
+    htmlProcessado = htmlProcessado.replace(/(?:\<br\>|^)\s*\-\.\s*([^\<]+|.+?)(?=\<br\>|$)/g, '<div class="custom-arrow">$1</div>');
+
+    // Limpeza fina de quebras residuais duplicadas
+    htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
+
+    return htmlProcessado;
+}      
         document.getElementById('btnRecuperar').addEventListener('click', function() {
             const email = document.getElementById('recuperarEmail').value.trim();
             if(!email) return alert("Por favor, digite seu e-mail.");
