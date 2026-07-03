@@ -537,7 +537,6 @@
         function tratarSintaxeConteudo(textoBruto) {
             if (!textoBruto) return "";
             
-            // 1) Padroniza as quebras nativas
             let htmlProcessado = textoBruto.replace(/\n/g, '<br>');
             const linhas = htmlProcessado.split('<br>');
             
@@ -548,7 +547,6 @@
                 let linhaOriginal = linhas[i];
                 let linhaClean = linhaOriginal.trim();
 
-                // 2) PROCESSADOR DE TABELAS PARSE SEQUENCIAL (T0. / T1.)
                 if (/^[tT]\d+\./.test(linhaClean) || /^[tT]\.[0-9]/.test(linhaClean)) {
                     if (!emTabela) {
                         emTabela = true;
@@ -558,7 +556,6 @@
                     const ehCabecalho = /0/.test(linhaClean.split(/\s+/)[0]);
                     const tagCelula = ehCabecalho ? 'th' : 'td';
 
-                    // Isola e limpa os dados removendo o marcador
                     let conteudoLinha = linhaClean.replace(/^[tT]\d+\.\s*|^[tT]\.\d+\s*/i, '');
                     const colunas = conteudoLinha.split('|');
                     
@@ -579,20 +576,17 @@
                     }
                 }
 
-                // 3) PARSER DE TÍTULOS E SUBTÍTULOS (Captura nível principal "1." e subníveis "1.1.")
                 if (/^\s*\d+(\.\d+)*\./.test(linhaClean)) {
                     linhas[i] = linhaOriginal.replace(/^\s*(\d+(?:\.\d+)*\.)\s*(.+?)$/g, 
                         '<div style="color: #C4974A; font-weight: bold; font-family: \'Cormorant Garamond\', serif; font-size: 21px; margin-top: 15px; margin-bottom: 10px;">$1 $2</div>');
                     continue;
                 }
 
-                // 4) PARSER DE MARCADOR BULLET (*.)
                 if (/^\s*\*\.\s*/.test(linhaClean)) {
                     linhas[i] = linhaOriginal.replace(/^\s*\*\.\s*(.+?)$/g, '<div class="custom-bullet">$1</div>');
                     continue;
                 }
 
-                // 5) PARSER DE MARCADOR SETA (-.) - CORRIGIDO COMPATIBILIDADE GLOBAL
                 if (/^\s*\-\.\s*/.test(linhaClean)) {
                     linhas[i] = linhaOriginal.replace(/^\s*\-\.\s*(.+?)$/g, '<div class="custom-arrow">$1</div>');
                     continue;
@@ -604,7 +598,6 @@
                 linhas[linhas.length - 1] += blocoTabelaHtml;
             }
 
-            // Sanitização e formatação fina final
             htmlProcessado = linhas.join('<br>');
             htmlProcessado = htmlProcessado.replace(/(<br>){3,}/g, '<br><br>');
             htmlProcessado = htmlProcessado.replace(/<br><div/g, '<div');
@@ -759,56 +752,61 @@
         }
 
         function exibirAula(aula) {
-    currentAulaId = aula.idAula;
-    document.getElementById('aulaTitulo').innerText = aula.tituloAula;
-    document.getElementById('aulaConteudo').innerHTML = "<em>Carregando conteúdo executivo...</em>";
-    document.getElementById('metaLeitura').style.display = 'none';
-    
-    // CAPTURA PREVENTIVA: Garante o ID do documento mesmo se a propriedade variar de nome na planilha
-    const idDoDocumento = aula.idDoc || aula.idDocumento || aula.idGoogleDoc || aula.linkDoc;
-    
-    if (!idDoDocumento || idDoDocumento === "undefined") {
-        document.getElementById('aulaConteudo').innerHTML = "<b style='color:#E74C3C;'>Erro: O ID do Google Doc não foi encontrado para esta aula na planilha de Cursos.</b>";
-        return;
-    }
-    
-    fetch(`${SCRIPT_URL}?action=carregarAula&idAmbiente=${currentAmbiente}&idCurso=${currentCursoId}&idAula=${currentAulaId}&idDoc=${idDoDocumento}`)
-    .then(res => res.json())
-    .then(res => {
-        if(res.success) {
-            const conteudoTratado = tratarSintaxeConteudo(res.conteudo);
-            document.getElementById('aulaConteudo').innerHTML = conteudoTratado;
-            document.getElementById('metaLeitura').style.display = 'flex';
+            currentAulaId = aula.idAula;
+            document.getElementById('aulaTitulo').innerText = aula.tituloAula;
+            document.getElementById('aulaConteudo').innerHTML = "<em>Carregando conteúdo executivo...</em>";
+            document.getElementById('metaLeitura').style.display = 'none';
             
-            // Calcula o tempo estimado de leitura baseado em ~150 palavras por minuto
-            const contagemPalavras = res.conteudo.split(/\s+/).length;
-            const tempoEstimado = Math.max(1, Math.ceil(contagemPalavras / 150));
-            document.getElementById('tempoEstimado').innerText = `⏱️ Leitura: ${tempoEstimado} min`;
+            const idDoDocumento = aula.idDoc || aula.idDocumento || aula.idGoogleDoc || aula.linkDoc;
             
-            // Atualiza as anotações do caderno de insights salvas anteriormente
-            document.getElementById('txtAnotacoes').value = res.anotacao || "";
+            if (!idDoDocumento || idDoDocumento === "undefined") {
+                document.getElementById('aulaConteudo').innerHTML = "<b style='color:#E74C3C;'>Erro: O ID do Google Doc não foi encontrado para esta aula na planilha de Cursos.</b>";
+                return;
+            }
             
-            // Ajusta o botão de conclusão do aluno
-            atualizarStatusBotaoConcluido();
-        } else {
-            document.getElementById('aulaConteudo').innerHTML = `<b style='color:#E74C3C;'>Erro ao carregar o conteúdo do documento.</b><br><small>${res.error || 'Verifique as permissões do Google Doc e se o ID está correto.'}</small>`;
+            fetch(`${SCRIPT_URL}?action=carregarAula&idAmbiente=${currentAmbiente}&idCurso=${currentCursoId}&idAula=${currentAulaId}&idDoc=${idDoDocumento}`)
+            .then(res => res.json())
+            .then(res => {
+                if(res.success) {
+                    const conteudoTratado = tratarSintaxeConteudo(res.conteudo);
+                    document.getElementById('aulaConteudo').innerHTML = conteudoTratado;
+                    document.getElementById('metaLeitura').style.display = 'flex';
+                    
+                    const contagemPalavras = res.conteudo.split(/\s+/).length;
+                    const tempoEstimado = Math.max(1, Math.ceil(contagemPalavras / 150));
+                    document.getElementById('tempoEstimado').innerText = `⏱️ Leitura: ${tempoEstimado} min`;
+                    
+                    document.getElementById('txtAnotacoes').value = res.anotacao || "";
+                    atualizarStatusBotaoConcluido();
+                } else {
+                    document.getElementById('aulaConteudo').innerHTML = `<b style='color:#E74C3C;'>Erro ao carregar o conteúdo do documento.</b><br><small>${res.error || 'Verifique as permissões do Google Doc e se o ID está correto.'}</small>`;
+                }
+            }).catch((err) => {
+                document.getElementById('aulaConteudo').innerHTML = "<b style='color:#E74C3C;'>Erro de comunicação com o ecossistema central.</b>";
+                console.error(err);
+            });
         }
-    }).catch((err) => {
-        document.getElementById('aulaConteudo').innerHTML = "<b style='color:#E74C3C;'>Erro de comunicação com o ecossistema central.</b>";
-        console.error(err);
-    });
-}
 
-// FUNÇÃO AUXILIAR PARA COMPLETAR O SCRIPT SEU QUE ESTAVA CORTADO
-function atualizarStatusBotaoConcluido() {
-    const btn = document.getElementById('btnMarcarConcluido');
-    const estaConcluida = localStorage.getItem(`concluida_${currentCursoId}_${currentAulaId}`) === 'true';
-    if(estaConcluida) {
-        btn.classList.add('active');
-        btn.innerText = "✓ Aula Concluída";
-    } else {
-        btn.classList.remove('active');
-        btn.innerText = "✓ Marcar Concluído";
-    }
-}
+        function atualizarStatusBotaoConcluido() {
+            const btn = document.getElementById('btnMarcarConcluido');
+            const estaConcluida = localStorage.getItem(`concluida_${currentCursoId}_${currentAulaId}`) === 'true';
+            if(estaConcluida) {
+                btn.classList.add('active');
+                btn.innerText = "✓ Aula Concluída";
+            } else {
+                btn.classList.remove('active');
+                btn.innerText = "✓ Marcar Concluído";
+            }
+        }
+
+        function toggleConclusaoAula() {
+            const chave = `concluida_${currentCursoId}_${currentAulaId}`;
+            const statusAtual = localStorage.getItem(chave) === 'true';
+            localStorage.setItem(chave, !statusAtual);
+            
+            atualizarStatusBotaoConcluido();
+            renderizarAulas(currentCursoId);
+        }
+    </script>
+</body>
 </html>
